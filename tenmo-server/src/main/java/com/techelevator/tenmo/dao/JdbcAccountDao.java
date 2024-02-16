@@ -21,12 +21,12 @@ public class JdbcAccountDao implements AccountDao {
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) { this.jdbcTemplate = jdbcTemplate; }
 
     @Override
-    public BigDecimal getBalance (int accountId) {
+    public BigDecimal getBalance (int userId) {
         String sql = "SELECT balance " +
                      "FROM account " +
-                     "WHERE account_id = ?;";
+                     "WHERE user_id = ?;";
 
-        SqlRowSet row = jdbcTemplate.queryForRowSet(sql, accountId);
+        SqlRowSet row = jdbcTemplate.queryForRowSet(sql, userId);
 
         BigDecimal balance = null;
         if(row.next())
@@ -54,10 +54,10 @@ public class JdbcAccountDao implements AccountDao {
         Account updatedAccount = null;
         String sql = "UPDATE account" +
                      "SET balance = ? " +
-                     "WHERE account_id = ?";
+                     "WHERE user_id = ?";
         try
         {
-            int rowsAffected = jdbcTemplate.update(sql, account.getBalance(), account.getAccountId());
+            int rowsAffected = jdbcTemplate.update(sql, account.getBalance(), account.getUserId());
             if (rowsAffected == 0)
             {
                 throw new DaoException("Zero rows affects, expected at least one");
