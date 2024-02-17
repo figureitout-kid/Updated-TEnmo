@@ -9,7 +9,8 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 
 public class AccountService {
-    private final String BASE_ACCOUNT_URL = "http://localhost:8080/accounts";
+    private final String API_BASE_URL = "http://localhost:8080";
+    private final String ACCOUNT_URL = "/accounts";
     private final String BALANCE_URL = "/balance";
     private final RestTemplate restTemplate = new RestTemplate();
     private String authToken = null;
@@ -19,11 +20,14 @@ public class AccountService {
         this.authToken = authToken;
     }
 
+    public AccountService(String API_BASE_URL) {
+    }
+
     public BigDecimal getCurrentBalance(int userId) {
         try
         {
             ResponseEntity<BigDecimal> response = restTemplate.exchange (
-                userId + BASE_ACCOUNT_URL + BALANCE_URL,
+                API_BASE_URL + BALANCE_URL,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     BigDecimal.class

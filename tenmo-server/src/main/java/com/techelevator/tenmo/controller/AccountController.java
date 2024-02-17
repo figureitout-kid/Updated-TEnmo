@@ -24,10 +24,13 @@ public class AccountController {
         this.userDao = userDao;
     }
 
-    @GetMapping("/{userId}/balance")
+    @GetMapping("/balance")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<BigDecimal> getBalance(@PathVariable int userId) {
-        BigDecimal balance = accountDao.getBalance(userId);
+    public ResponseEntity<BigDecimal> getBalance(Principal principal) {
+        String username = principal.getName();
+        User user = userDao.getUserByUsername(username);
+
+        BigDecimal balance = accountDao.getBalance(user.getId());
         if (balance != null)
         {
             return new ResponseEntity<>(balance, HttpStatus.OK);

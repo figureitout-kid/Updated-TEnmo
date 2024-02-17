@@ -46,6 +46,8 @@ public class ConsoleService {
         System.out.println();
     }
 
+
+
     public UserCredentials promptForCredentials() {
         String username = promptForString("Username: ");
         String password = promptForString("Password: ");
@@ -84,6 +86,7 @@ public class ConsoleService {
         scanner.nextLine();
     }
 
+    public void printBalance(BigDecimal balance) { System.out.println("Your current balance is: $" + balance);}
     public void printErrorMessage() {
         System.out.println("An error occurred. Check the log for details.");
     }
