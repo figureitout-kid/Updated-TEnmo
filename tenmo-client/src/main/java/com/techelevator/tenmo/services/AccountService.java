@@ -9,8 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 
 public class AccountService {
-    private final String API_BASE_URL = "http://localhost:8080";
-    private final String ACCOUNT_URL = "/accounts";
+    private final String API_BASE_URL = "http://localhost:8080/accounts";
     private final String BALANCE_URL = "/balance";
     private final RestTemplate restTemplate = new RestTemplate();
     private String authToken = null;
