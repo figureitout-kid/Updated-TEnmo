@@ -4,21 +4,24 @@ import java.math.BigDecimal;
 
 public class Transfer {
     private int transferId;
-    private int transferTypeId;
-    private int transferStatusId;
+    private TransferType transferType; // utilizing the enum
+    private TransferStatus transferStatus;
     private int accountFrom;
     private int accountTo;
     private BigDecimal amount;
 
     //constructor
-    public Transfer(int transferId, int transferTypeId, int transferStatusId, int accountFrom, int accountTo, BigDecimal amount) {
+    public Transfer(int transferId, TransferType transferType, TransferStatus transferStatus, int accountFrom, int accountTo, BigDecimal amount) {
         this.transferId = transferId;
-        this.transferTypeId = transferTypeId;
-        this.transferStatusId = transferStatusId;
+        this.transferType = transferType;
+        this.transferStatus = transferStatus;
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
     }
 
+    public Transfer() {
+
+    }
 
     //getters and setters
     public int getTransferId() {
@@ -29,20 +32,20 @@ public class Transfer {
         this.transferId = transferId;
     }
 
-    public int getTransferTypeId() {
-        return transferTypeId;
+    public TransferType getTransferType() {
+        return transferType;
     }
 
-    public void setTransferTypeId(int transferTypeId) {
-        this.transferTypeId = transferTypeId;
+    public void setTransferTypeId(TransferType transferType) {
+        this.transferType = transferType;
     }
 
-    public int getTransferStatusId() {
-        return transferStatusId;
+    public TransferStatus getTransferStatus() {
+        return transferStatus;
     }
 
-    public void setTransferStatusId(int transferStatusId) {
-        this.transferStatusId = transferStatusId;
+    public void setTransferStatus(TransferStatus transferStatus) {
+        this.transferStatus = transferStatus;
     }
 
     public int getAccountFrom() {
@@ -67,5 +70,17 @@ public class Transfer {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Transfer{" +
+                "transferId=" + transferId +
+                ", transferType=" + (transferType != null ? transferType.name() : "null") +
+                ", transferStatus=" + (transferStatus != null ? transferStatus.name() : "null") +
+                ", accountFrom=" + accountFrom +
+                ", accountTo=" + accountTo +
+                ", amount=" + amount +
+                '}';
     }
 }
