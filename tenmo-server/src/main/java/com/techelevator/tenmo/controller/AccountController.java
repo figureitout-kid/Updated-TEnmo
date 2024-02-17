@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/accounts")
 public class AccountController {
     private AccountDao accountDao;
     private UserDao userDao;
