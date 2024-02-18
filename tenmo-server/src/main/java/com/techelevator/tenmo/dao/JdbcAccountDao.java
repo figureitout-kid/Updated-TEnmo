@@ -11,14 +11,12 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 
-/* Potential issue-- currently using AccountId for checking account balance/updating balance
-will need to ensure this is best practice, or change to userId potentially later when sendBucks implemented
-*/
-
 @Component
 public class JdbcAccountDao implements AccountDao {
+
     private final JdbcTemplate jdbcTemplate;
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) { this.jdbcTemplate = jdbcTemplate; }
+
 
     @Override
     public BigDecimal getBalance (int userId) {

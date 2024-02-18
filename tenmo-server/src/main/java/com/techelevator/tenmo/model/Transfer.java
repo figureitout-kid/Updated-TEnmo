@@ -36,7 +36,7 @@ public class Transfer {
         return transferType;
     }
 
-    public void setTransferTypeId(TransferType transferType) {
+    public void setTransferType(TransferType transferType) {
         this.transferType = transferType;
     }
 
