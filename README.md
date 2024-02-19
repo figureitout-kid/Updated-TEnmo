@@ -1,4 +1,4 @@
-# Money Transfer App
+# Money Transfer App (Work in Progress - as of 02/24)
 
 This app is an online payment service for transferring bucks between friends. It consists of the backend, which is a RESTful API server, and a frontend which is a java-based command-line application.
 

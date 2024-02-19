@@ -30,4 +30,7 @@ public class JdbcTransferTypeDao implements TransferTypeDao {
             throw new DaoException("Transfer type not found for id " + transferTypeId);
         }
     }
+
+    /* did not utilize a mapper here as we used an enum, but in the future could be added
+    for any potential changes to how the transfer status/type are used. */
 }
