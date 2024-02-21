@@ -115,9 +115,38 @@ public class TransferService {
     }
 
 
-    public Transfer updateTransfer() {
+    public Transfer updateTransfer(Transfer transfer) {
+        try
+        {
+            ResponseEntity<Transfer> response = restTemplate.exchange(
+                    API_BASE_URL + transfer.getTransferId(),
+                    HttpMethod.PUT,
+                    makeTransferEntity(transfer),
+                    Transfer.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK)
+            {
+                return response.getBody();
+            }
+            else
+            {
+                System.out.println("Failed to update the transfer. Status code: " + response.getStatusCode());
+            }
+        }
+        catch (RestClientResponseException e)
+        {
+            handleRestClientResponseException(e);
+        }
+        catch (ResourceAccessException e)
+        {
+            BasicLogger.log(e.getMessage());
+            System.out.println("Cannot access teh resource: " + e.getMessage());
+        }
         return null;
     }
+
+
 
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
