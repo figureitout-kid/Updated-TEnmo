@@ -7,6 +7,7 @@ import com.techelevator.tenmo.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -43,17 +44,21 @@ public class AccountController {
 
     //TODO this will need to be tied into creating a transaction once that is up and running? Keeping in mind-- the amount to transfer will be deducted from sender
     //TODO and added to the receiver balances.
-//    @PutMapping("/{userId}/update")
-//    public ResponseEntity<Account> updateAccountBalance(@PathVariable int userId, @RequestBody BigDecimal amount) {
-//        try
-//        {
-//            Account accountToUpdate = accountDao.getAccountByUserId(userId);
-//            if (accountToUpdate != null)
-//            {
-//                accountToUpdate.setBalance();
-//            }
-//        }
-//    }
+    @Transactional
+    @PutMapping("/{userId}/balance")
+    public ResponseEntity<Account> updateAccountBalance(@PathVariable int userId, @RequestBody BigDecimal newBalance) {
+        Account account = accountDao.getAccountByUserId(userId);
+        if (account != null)
+        {
+            account.setBalance(newBalance);
+            accountDao.updateBalance(account);
+            return new ResponseEntity<>(account, HttpStatus.OK);
+        }
+        else
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
     private int findUserIdByUsername(String username) {
