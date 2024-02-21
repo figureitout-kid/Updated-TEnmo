@@ -45,8 +45,44 @@ public class TransferService {
         }
         return null;
     }
-//TODO FINISH TRANSFERSERVICE: GETTRANSFERBYID, GET ALL TRANSFERS FOR USER, AND UPDATE TRANSFER
+//TODO FINISH TRANSFERSERVICE: GET ALL TRANSFERS FOR USER, AND UPDATE TRANSFER
     public Transfer getTransferById(int transferId) {
+        try {
+            ResponseEntity<Transfer> response = restTemplate.exchange(
+                    API_BASE_URL + transferId,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Transfer.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK)
+            {
+                return response.getBody();
+            }
+            else
+            {
+                System.out.println("Failed to get transfer details, Status code: " + response.getStatusCode());
+            }
+        }
+        catch (RestClientResponseException e)
+        {
+            handleRestClientResponseException(e);
+        }
+        catch (ResourceAccessException e)
+        {
+            BasicLogger.log(e.getMessage());
+            System.out.println("Cannot access the resource " + e.getMessage());
+        }
+        return null;
+    }
+
+
+
+    public Transfer<> getAllTransfers() {
+        return null;
+    }
+
+    public Transfer updateTransfer() {
         return null;
     }
 
@@ -55,6 +91,12 @@ public class TransferService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(authToken);
         return new HttpEntity<>(transfer, headers);
+    }
+
+    private HttpEntity<Void> makeAuthEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+        return new HttpEntity<>(headers);
     }
 
     private void handleRestClientResponseException(RestClientResponseException e) {
