@@ -52,6 +52,27 @@ public class AccountService {
         return null;
     }
 
+    public boolean updateBalance(BigDecimal newBalance, int userId) {
+        String updateBalanceUrl = API_BASE_URL + "/" + userId + BALANCE_URL ;
+
+        HttpEntity<BigDecimal> entity = new HttpEntity<>(newBalance, makeAuthEntity().getHeaders());
+
+        try
+        {
+            restTemplate.put(updateBalanceUrl, entity);
+            return true;
+        }
+        catch (RestClientResponseException e)
+        {
+            handleRestClientResponseException(e);
+        }
+        catch (ResourceAccessException e)
+        {
+            BasicLogger.log(e.getMessage());
+            System.out.println("Cannot access the resource: " + e.getMessage());
+        }
+        return false;
+    }
 // TODO add getAccountByAccountId and getAccountByUserId and updateBalance--------------------------------------------------------
 
 
