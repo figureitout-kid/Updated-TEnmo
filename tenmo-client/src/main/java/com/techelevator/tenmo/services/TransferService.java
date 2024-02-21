@@ -2,10 +2,14 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.util.BasicLogger;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Collections;
+import java.util.List;
 
 public class TransferService {
     private final String API_BASE_URL = "http://localhost:8080/transfers";
@@ -47,7 +51,8 @@ public class TransferService {
     }
 //TODO FINISH TRANSFERSERVICE: GET ALL TRANSFERS FOR USER, AND UPDATE TRANSFER
     public Transfer getTransferById(int transferId) {
-        try {
+        try
+        {
             ResponseEntity<Transfer> response = restTemplate.exchange(
                     API_BASE_URL + transferId,
                     HttpMethod.GET,
@@ -78,9 +83,37 @@ public class TransferService {
 
 
 
-    public Transfer<> getAllTransfers() {
-        return null;
+    public List<Transfer> getAllTransfersForUser(int userId) {
+        try
+        {
+            ResponseEntity<List<Transfer>> response = restTemplate.exchange(
+                    API_BASE_URL + "/users/" + userId,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    new ParameterizedTypeReference<List<Transfer>>() {}
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK)
+            {
+                return response.getBody();
+            }
+            else
+            {
+                System.out.println("Failed to get transfer list. Status code: " + response.getStatusCode());
+            }
+        }
+        catch (RestClientResponseException e)
+        {
+            handleRestClientResponseException(e);
+        }
+        catch (ResourceAccessException e)
+        {
+            BasicLogger.log(e.getMessage());
+            System.out.println("Cannot access the resource: " + e.getMessage());
+        }
+        return Collections.emptyList();
     }
+
 
     public Transfer updateTransfer() {
         return null;
