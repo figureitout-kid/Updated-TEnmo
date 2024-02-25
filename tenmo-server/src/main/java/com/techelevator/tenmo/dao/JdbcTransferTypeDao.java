@@ -4,7 +4,9 @@ import com.techelevator.tenmo.exception.DaoException;
 import com.techelevator.tenmo.model.TransferType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JdbcTransferTypeDao implements TransferTypeDao {
     private final JdbcTemplate jdbcTemplate;
     public JdbcTransferTypeDao(JdbcTemplate jdbcTemplate) {

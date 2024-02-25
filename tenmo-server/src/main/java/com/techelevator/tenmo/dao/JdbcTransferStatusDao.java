@@ -6,7 +6,10 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JdbcTransferStatusDao implements TransferStatusDao {
     private final JdbcTemplate jdbcTemplate;
     public JdbcTransferStatusDao (JdbcTemplate jdbcTemplate) {
@@ -16,7 +19,7 @@ public class JdbcTransferStatusDao implements TransferStatusDao {
     @Override
     public TransferStatus getTransferStatusById(int transferStatusId) {
         String sql = "SELECT transfer_status_id, transfer_status_desc, " +
-                     "FROM transfer_status" +
+                     "FROM transfer_status " +
                      "WHERE transfer_status_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferStatusId);
         if (results.next())
