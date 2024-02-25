@@ -99,4 +99,9 @@ public class User {
               ", authorities=" + authorities +
               '}';
    }
+
+   //toString method to print all users and their ids, with sending/receiving te bucks functionality
+   public String toSimpleString() {
+      return "User ID: " + id + ", Username: " + username;
+   }
 }
