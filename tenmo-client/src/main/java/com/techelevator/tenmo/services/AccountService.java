@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
@@ -73,7 +74,27 @@ public class AccountService {
         }
         return false;
     }
-// TODO add getAccountByAccountId and getAccountByUserId and updateBalance--------------------------------------------------------
+
+    public Account getAccountByUserId(int userId) {
+        String url = API_BASE_URL + "/user/" + userId + "/account";
+        HttpEntity<Void> entity = makeAuthEntity();
+        try
+        {
+            ResponseEntity<Account> response = restTemplate.exchange(url, HttpMethod.GET, entity, Account.class);
+            return response.getBody();
+        }
+        catch (RestClientResponseException e)
+        {
+            handleRestClientResponseException(e);
+        }
+        catch (ResourceAccessException e)
+        {
+            BasicLogger.log(e.getMessage());
+            System.out.println("Cannot access the resource: " + e.getMessage());
+        }
+        return null;
+    }
+// TODO add getAccountByAccountId and updateBalance--------------------------------------------------------
 
 
     //helper methods

@@ -138,12 +138,23 @@ public class App {
             return;
         }
 
+        //retrieve account ids
+        Account senderAccount = accountService.getAccountByUserId(currentUser.getUser().getId());
+        Account recipientAccount = accountService.getAccountByUserId(recipientUserId);
+
+        //check if both accounts are retrieved
+        if (senderAccount == null || recipientAccount == null)
+        {
+            consoleService.printErrorMessage("One of the accounts could not be found.");
+            return;
+        }
+
         //create a pending transfer
         Transfer transfer = new Transfer();
         transfer.setTransferType(TransferType.SEND);
         transfer.setTransferStatus(TransferStatus.PENDING);
-        transfer.setAccountFrom(currentUser.getUser().getId());
-        transfer.setAccountTo(recipientUserId);
+        transfer.setAccountFrom(senderAccount.getAccountId());
+        transfer.setAccountTo(recipientAccount.getAccountId());
         transfer.setAmount(amount);
 
         //execute transfer and update balances within transactional context
@@ -153,7 +164,7 @@ public class App {
             consoleService.printErrorMessage("Failed to initiate transfer.");
             return;
         }
-
+//        BigDecimal balance = accountService.getCurrentBalance(currentUser.getUser().getId());
         //update balances
         boolean senderBalanceUpdated = accountService.updateBalance(currentUser.getUser().getId(), balance.subtract(amount));
 		boolean recipientBalanceUpdated = accountService.updateBalance(recipientUserId, accountService.getCurrentBalance(recipientUserId).add(amount));

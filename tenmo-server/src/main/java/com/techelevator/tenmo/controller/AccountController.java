@@ -32,12 +32,9 @@ public class AccountController {
         User user = userDao.getUserByUsername(username);
 
         BigDecimal balance = accountDao.getBalance(user.getId());
-        if (balance != null)
-        {
+        if (balance != null) {
             return new ResponseEntity<>(balance, HttpStatus.OK);
-        }
-        else
-        {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -48,10 +45,21 @@ public class AccountController {
     @PutMapping("/{userId}/balance")
     public ResponseEntity<Account> updateAccountBalance(@PathVariable int userId, @RequestBody BigDecimal newBalance) {
         Account account = accountDao.getAccountByUserId(userId);
-        if (account != null)
-        {
+        if (account != null) {
             account.setBalance(newBalance);
             accountDao.updateBalance(account);
+            return new ResponseEntity<>(account, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/user/{userId}/account")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Account> getAccountByUserId(@PathVariable int userId) {
+        Account account = accountDao.getAccountByUserId(userId);
+        if (account != null)
+        {
             return new ResponseEntity<>(account, HttpStatus.OK);
         }
         else
@@ -67,6 +75,8 @@ public class AccountController {
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User: " + username + "not found.");
     }
 }
+
+
 
 
 

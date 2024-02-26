@@ -76,7 +76,7 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public Transfer updateTransfer(Transfer transfer) {
         String sql = "UPDATE transfer " +
-                     "SET transfer_type_id = ?, transfer_status_id = ?, account_from = ?, account_to = ?, amount = ?" +
+                     "SET transfer_type_id = ?, transfer_status_id = ?, account_from = ?, account_to = ?, amount = ? " +
                      "WHERE transfer_id = ?;";
 
         int rowsAffected = jdbcTemplate.update(sql,

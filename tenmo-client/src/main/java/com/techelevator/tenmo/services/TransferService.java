@@ -54,7 +54,7 @@ public class TransferService {
         try
         {
             ResponseEntity<Transfer> response = restTemplate.exchange(
-                    API_BASE_URL + transferId,
+                    API_BASE_URL + "/" + transferId,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Transfer.class
@@ -119,7 +119,7 @@ public class TransferService {
         try
         {
             ResponseEntity<Transfer> response = restTemplate.exchange(
-                    API_BASE_URL + transfer.getTransferId(),
+                    API_BASE_URL + "/" + transfer.getTransferId(),
                     HttpMethod.PUT,
                     makeTransferEntity(transfer),
                     Transfer.class
