@@ -141,7 +141,7 @@ public class TransferService {
         catch (ResourceAccessException e)
         {
             BasicLogger.log(e.getMessage());
-            System.out.println("Cannot access teh resource: " + e.getMessage());
+            System.out.println("Cannot access the resource: " + e.getMessage());
         }
         return null;
     }
