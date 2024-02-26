@@ -1,9 +1,11 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleService {
@@ -89,6 +91,23 @@ public class ConsoleService {
     public void printBalance(BigDecimal balance) { System.out.println("Your current balance is: $" + balance);}
     public void printErrorMessage() {
         System.out.println("An error occurred. Check the log for details.");
+    }
+
+    public void printUsers(List<User> users) {
+        System.out.println("\nAvailable users for sending TE bucks:");
+        for (User user : users)
+        {
+            System.out.println("User ID: " + user.getId() + ", Username: " + user.getUsername());
+        }
+    }
+
+    public int promptForUserId() {
+        System.out.print("\nEnter the ID of the user you want to send TE bucks to: ");
+        return promptForInt("User ID: ");
+    }
+
+    public BigDecimal promptForAmount() {
+        return promptForBigDecimal("Enter the amount of TE bucks to send: ");
     }
 
 }
