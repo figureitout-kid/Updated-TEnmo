@@ -52,7 +52,7 @@ public class AccountService {
         return null;
     }
 
-    public boolean updateBalance(BigDecimal newBalance, int userId) {
+    public boolean updateBalance(int userId, BigDecimal newBalance) {
         String updateBalanceUrl = API_BASE_URL + "/" + userId + BALANCE_URL ;
 
         HttpEntity<BigDecimal> entity = new HttpEntity<>(newBalance, makeAuthEntity().getHeaders());

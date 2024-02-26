@@ -89,9 +89,8 @@ public class ConsoleService {
     }
 
     public void printBalance(BigDecimal balance) { System.out.println("Your current balance is: $" + balance);}
-    public void printErrorMessage() {
-        System.out.println("An error occurred. Check the log for details.");
-    }
+    public void printErrorMessage(String message) { System.out.println(message);}
+    public void printSuccessMessage(String message) { System.out.println(message); }
 
     public void printUsers(List<User> users) {
         System.out.println("\nAvailable users for sending TE bucks:");

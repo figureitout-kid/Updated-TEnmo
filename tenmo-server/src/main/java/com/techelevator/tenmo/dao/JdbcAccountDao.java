@@ -50,7 +50,7 @@ public class JdbcAccountDao implements AccountDao {
     @Override
     public Account updateBalance(Account account) {
         Account updatedAccount = null;
-        String sql = "UPDATE account" +
+        String sql = "UPDATE account " +
                      "SET balance = ? " +
                      "WHERE user_id = ?";
         try

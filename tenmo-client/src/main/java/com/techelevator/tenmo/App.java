@@ -1,12 +1,11 @@
 package com.techelevator.tenmo;
 
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.UserCredentials;
-import com.techelevator.tenmo.services.AccountService;
-import com.techelevator.tenmo.services.AuthenticationService;
-import com.techelevator.tenmo.services.ConsoleService;
+import com.techelevator.tenmo.model.*;
+import com.techelevator.tenmo.services.*;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class App {
 
@@ -14,7 +13,9 @@ public class App {
 
     private final ConsoleService consoleService = new ConsoleService();
     private final AccountService accountService = new AccountService(API_BASE_URL);
+    private final TransferService transferService = new TransferService(API_BASE_URL);
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
+    private final UserService userService = new UserService(API_BASE_URL);
 
     private AuthenticatedUser currentUser;
 
@@ -52,7 +53,7 @@ public class App {
         if (authenticationService.register(credentials)) {
             System.out.println("Registration successful. You can now login.");
         } else {
-            consoleService.printErrorMessage();
+            consoleService.printErrorMessage("Error registering new user.");
         }
     }
 
@@ -60,7 +61,7 @@ public class App {
         UserCredentials credentials = consoleService.promptForCredentials();
         currentUser = authenticationService.login(credentials);
         if (currentUser == null) {
-            consoleService.printErrorMessage();
+            consoleService.printErrorMessage("Log in has failed.");
         }
     }
 
@@ -100,7 +101,7 @@ public class App {
         }
         catch (Exception e)
         {
-            consoleService.printErrorMessage();
+            consoleService.printErrorMessage("Could not retrieve balance.");
         }
 		
 	}
@@ -114,10 +115,61 @@ public class App {
 		// TODO Auto-generated method stub
 		
 	}
-
+//check if potential issue api variables and add more informed print messages
 	private void sendBucks() {
-		// TODO Auto-generated method stub
-		
+		//display eligible users and prompt for recipient and amount
+        List<User> users = userService.getAllUsersExcludingCurrent(currentUser.getUser().getId());
+        consoleService.printUsers(users);
+        int recipientUserId = consoleService.promptForUserId();
+        BigDecimal amount = consoleService.promptForAmount();
+
+        //validate input
+        if (recipientUserId == currentUser.getUser().getId() || amount.compareTo(BigDecimal.ZERO) <= 0)
+        {
+            consoleService.printErrorMessage("Invalid recipent or amount.");
+            return;
+        }
+
+        //balance check
+        BigDecimal balance = accountService.getCurrentBalance(currentUser.getUser().getId());
+        if(balance.compareTo(amount) < 0)
+        {
+            consoleService.printErrorMessage("Insufficient balance.");
+            return;
+        }
+
+        //create a pending transfer
+        Transfer transfer = new Transfer();
+        transfer.setTransferType(TransferType.SEND);
+        transfer.setTransferStatus(TransferStatus.PENDING);
+        transfer.setAccountFrom(currentUser.getUser().getId());
+        transfer.setAccountTo(recipientUserId);
+        transfer.setAmount(amount);
+
+        //execute transfer and update balances within transactional context
+        Transfer createdTransfer = transferService.createTransfer(transfer);
+        if (createdTransfer == null)
+        {
+            consoleService.printErrorMessage("Failed to initiate transfer.");
+            return;
+        }
+
+        //update balances
+        boolean senderBalanceUpdated = accountService.updateBalance(currentUser.getUser().getId(), balance.subtract(amount));
+		boolean recipientBalanceUpdated = accountService.updateBalance(recipientUserId, accountService.getCurrentBalance(recipientUserId).add(amount));
+
+        //finalize transfer
+        if (senderBalanceUpdated && recipientBalanceUpdated)
+        {
+            createdTransfer.setTransferStatus(TransferStatus.APPROVED);
+            consoleService.printSuccessMessage("Transfer successful.");
+        }
+        else
+        {
+            createdTransfer.setTransferStatus(TransferStatus.REJECTED);
+            consoleService.printErrorMessage("Transfer failed during balance update.");
+        }
+        transferService.updateTransfer(createdTransfer);
 	}
 
 	private void requestBucks() {
