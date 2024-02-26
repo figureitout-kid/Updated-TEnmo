@@ -8,6 +8,8 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UserService {
@@ -98,5 +100,25 @@ public class UserService {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(authToken);
         return new HttpEntity<>(headers);
+    }
+
+    //helper method to filter out the current user when printing all users
+    public List<User> getAllUsersExcludingCurrent(int currentUserId) {
+        List<User> allUsers = getAllUsers();
+        List<User> filteredUsers = new ArrayList<>();
+
+        if (allUsers == null)
+        {
+            return Collections.emptyList();
+        }
+
+        for (User user : allUsers)
+        {
+            if (user.getId() != currentUserId)
+            {
+                filteredUsers.add(user);
+            }
+        }
+        return filteredUsers;
     }
 }
