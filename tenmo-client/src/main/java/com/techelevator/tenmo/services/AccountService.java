@@ -22,7 +22,7 @@ public class AccountService {
 
     public AccountService(String API_BASE_URL) {
     }
-
+//added / + userId to getCurrentBalance to fix bug issue of adjusting the balance after a transaction
     public BigDecimal getCurrentBalance(int userId) {
         try
         {
