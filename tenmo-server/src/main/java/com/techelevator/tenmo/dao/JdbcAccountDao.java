@@ -90,6 +90,28 @@ public class JdbcAccountDao implements AccountDao {
         }
     }
 
+    @Override
+    public void subtractFromBalance(int userId, BigDecimal amount) {
+        //get current account
+        Account account = getAccountByUserId(userId);
+        if (account != null)
+        {
+            BigDecimal newBalance = account.getBalance().subtract(amount);
+            //check for overdraft-- may want to implement this elsewhere, covering it here for now
+            if (newBalance.compareTo(BigDecimal.ZERO) < 0)
+            {
+                throw new DaoException("Insufficient funds for userId: " + userId);
+            }
+
+            account.setBalance(newBalance);
+            updateBalance(account);
+        }
+        else
+        {
+            throw new DaoException("Account not found for userId: " + userId);
+        }
+    }
+
 
     private Account mapRowToAccount(SqlRowSet rs) {
         Account account = new Account();
