@@ -73,6 +73,23 @@ public class JdbcAccountDao implements AccountDao {
         return updatedAccount;
     }
 
+    @Override
+    public void addToBalance(int userId, BigDecimal amount) {
+        //get current account
+        Account account = getAccountByUserId(userId);
+        if (account != null)
+        {
+            BigDecimal newBalance = account.getBalance().add(amount);
+            //use existing updateBalance method to persis the new balance
+            account.setBalance(newBalance);
+            updateBalance(account);
+        }
+        else
+        {
+            throw new DaoException("Account not found for userId: " + userId);
+        }
+    }
+
 
     private Account mapRowToAccount(SqlRowSet rs) {
         Account account = new Account();
