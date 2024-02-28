@@ -115,7 +115,11 @@ public class App {
 		// TODO Auto-generated method stub
 		
 	}
-//check if potential issue api variables and add more informed print messages
+
+
+/* TODO with sendBucks : 1> add more informed print messages, 2> chop up sendBucks into
+   TODO smaller pieces-- split checking for valid transfers/transfer/etc. 3> Also needs to be atomic- if one update fails, it
+   TODO all fails. 4> Double check security measures. */
 	private void sendBucks() {
 		//display eligible users and prompt for recipient and amount
         List<User> users = userService.getAllUsersExcludingCurrent(currentUser.getUser().getId());
@@ -126,7 +130,7 @@ public class App {
         //validate input
         if (recipientUserId == currentUser.getUser().getId() || amount.compareTo(BigDecimal.ZERO) <= 0)
         {
-            consoleService.printErrorMessage("Invalid recipent or amount.");
+            consoleService.printErrorMessage("Invalid recipient or amount.");
             return;
         }
 

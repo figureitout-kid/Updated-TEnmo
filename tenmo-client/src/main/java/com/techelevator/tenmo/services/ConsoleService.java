@@ -110,3 +110,5 @@ public class ConsoleService {
     }
 
 }
+
+//TODO : make the printing of user names and ids a little more fun/creative
