@@ -96,7 +96,7 @@ public class ConsoleService {
         System.out.println("\nAvailable users for sending TE bucks:");
         for (User user : users)
         {
-            System.out.println("User ID: " + user.getId() + ", Username: " + user.getUsername());
+            System.out.println("Username: " + user.getUsername() + "  |  User ID: " + user.getId());
         }
     }
 
