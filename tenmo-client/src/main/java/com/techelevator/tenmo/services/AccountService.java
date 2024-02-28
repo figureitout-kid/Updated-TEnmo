@@ -22,12 +22,12 @@ public class AccountService {
 
     public AccountService(String API_BASE_URL) {
     }
-//added / + userId to getCurrentBalance to fix bug issue of adjusting the balance after a transaction
+
     public BigDecimal getCurrentBalance(int userId) {
         try
         {
             ResponseEntity<BigDecimal> response = restTemplate.exchange (
-                API_BASE_URL + BALANCE_URL,
+                API_BASE_URL + BALANCE_URL + "/" + userId,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     BigDecimal.class
@@ -94,7 +94,7 @@ public class AccountService {
         }
         return null;
     }
-// TODO add getAccountByAccountId and updateBalance--------------------------------------------------------
+// TODO add getAccountByAccountId--------------------------------------------------------
 
 
     //helper methods
