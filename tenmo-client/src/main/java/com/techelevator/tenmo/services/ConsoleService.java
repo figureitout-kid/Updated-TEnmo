@@ -117,33 +117,36 @@ public class ConsoleService {
         return promptForInt("User ID: ");
     }
 
-    public void printTransfers(List<Transfer> transfers, int accountId) {
+    public void printTransfers(List<Transfer> transfers, int userId) {
 
         System.out.println("TRANSFERS:");
         System.out.println(String.format("%-10s %-25s %-10s", "ID" , "FROM/TO", "AMOUNT"));
         System.out.println("--------------------------------------------");
 
-
+        int userAccountId = userService.getAccountIdByUserId(userId);
         for (Transfer transfer : transfers)
         {
             String fromTo = "Unknown";
-            if (transfer.getAccountFrom() == accountId)
+            String positiveNegative = "";
+            if (transfer.getAccountFrom() == userAccountId)
             {
                 //outgoing transfer, show who it is "to"
                 String username = userService.getUsernameByAccountId(transfer.getAccountTo());
-                fromTo = (username != null) ? "To: " + username : "To: Unknown";
+                fromTo = "To: " + username;
+                positiveNegative = "-";
             }
-            else  if (transfer.getAccountTo() == accountId)
+            else  if (transfer.getAccountTo() == userAccountId)
             {
                 //incoming transfer, show who it "from"
                 String username = userService.getUsernameByAccountId(transfer.getAccountFrom());
-                fromTo = (username != null) ? "From: " + username : "From: Unknown";
+                fromTo = "From: " + username;
+                positiveNegative = "+";
             }
 
-            System.out.println(String.format("%-10d %-25s $%-10.2f",
+            System.out.println(String.format("%-10d %-25s $%s%-10.2f",
                                              transfer.getTransferId(),
                                              fromTo,
-                                             transfer.getAmount()));
+                                             positiveNegative, transfer.getAmount()));
         }
         System.out.println("--------------------------------------------");
     }

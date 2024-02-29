@@ -41,6 +41,7 @@ public class UserController {
     public String getUsernameByUserId(@PathVariable int userId) {return userDao.getUsernameByUserId(userId);}
     @GetMapping("/{accountId}/username")
     public String getUsernameByAccountId(@PathVariable int accountId) {return userDao.getUsernameByAccountId(accountId);}
-
+    @GetMapping("/{userId}/accountId-by-userid")
+    public int getAccountIdByUserId(@PathVariable int userId) {return userDao.getAccountIdByUserId(userId);}
 
 }

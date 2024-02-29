@@ -17,4 +17,6 @@ public interface UserDao {
 
     String getUsernameByUserId(int userId);
     String getUsernameByAccountId(int accountId);
+
+    int getAccountIdByUserId(int userId);
 }

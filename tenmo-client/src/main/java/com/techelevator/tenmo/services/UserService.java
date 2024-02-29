@@ -4,6 +4,8 @@ import com.techelevator.tenmo.model.User;
 import com.techelevator.util.BasicLogger;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
@@ -111,6 +113,34 @@ public class UserService {
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
         return null;
+    }
+    public int getAccountIdByUserId(int userId) {
+        try {
+            ResponseEntity<Integer> response = restTemplate.exchange(
+                    API_BASE_URL + "/" + userId + "/accountId-by-userid",
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Integer.class
+            );
+            if (response.getStatusCode() == HttpStatus.OK)
+            {
+                return response.getBody();
+            }
+            else
+            {
+                System.out.println("Failed to get the accountId. Status code: " + response.getStatusCode());
+            }
+        }
+        catch (RestClientResponseException e)
+        {
+            handleRestClientResponseException(e);
+        }
+        catch (ResourceAccessException e)
+        {
+            BasicLogger.log(e.getMessage());
+            System.out.println("Cannot access the resource: " + e.getMessage());
+        }
+        return -1;
     }
 
     private void handleRestClientResponseException(RestClientResponseException e) {
