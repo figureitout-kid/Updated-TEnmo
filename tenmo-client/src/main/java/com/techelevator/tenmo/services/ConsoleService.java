@@ -117,26 +117,35 @@ public class ConsoleService {
         return promptForInt("User ID: ");
     }
 
-    public void printTransfers(List<Transfer> transfers, int userId) {
-        System.out.println("Transfers");
-        System.out.println("ID\t\tFrom/To\t\t\tAmount");
-        System.out.println("------------------------------------------");
+    public void printTransfers(List<Transfer> transfers, int accountId) {
+
+        System.out.println("TRANSFERS:");
+        System.out.println(String.format("%-10s %-25s %-10s", "ID" , "FROM/TO", "AMOUNT"));
+        System.out.println("--------------------------------------------");
+
 
         for (Transfer transfer : transfers)
         {
-            String fromTo;
-            if (transfer.getAccountFrom() == userId)
+            String fromTo = "Unknown";
+            if (transfer.getAccountFrom() == accountId)
             {
-                fromTo = "To: " + userService.getUsernameByAccountId(transfer.getAccountTo());
+                //outgoing transfer, show who it is "to"
+                String username = userService.getUsernameByAccountId(transfer.getAccountTo());
+                fromTo = (username != null) ? "To: " + username : "To: Unknown";
             }
-            else
+            else  if (transfer.getAccountTo() == accountId)
             {
-                fromTo = "From: " + userService.getUsernameByAccountId(transfer.getAccountFrom());
+                //incoming transfer, show who it "from"
+                String username = userService.getUsernameByAccountId(transfer.getAccountFrom());
+                fromTo = (username != null) ? "From: " + username : "From: Unknown";
             }
 
-            System.out.println(transfer.getTransferId() + "\t\t" + fromTo + "\t\t$" +transfer.getAmount());
+            System.out.println(String.format("%-10d %-25s $%-10.2f",
+                                             transfer.getTransferId(),
+                                             fromTo,
+                                             transfer.getAmount()));
         }
-        System.out.println("------------------------------------------");
+        System.out.println("--------------------------------------------");
     }
 
     public BigDecimal promptForAmount() {

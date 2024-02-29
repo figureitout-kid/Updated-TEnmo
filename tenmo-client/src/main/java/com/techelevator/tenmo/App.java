@@ -92,7 +92,7 @@ public class App {
 	private void viewCurrentBalance() {
 		try
         {
-            Integer userId = currentUser.getUser().getId();
+            int userId = currentUser.getUser().getId();
             accountService.setAuthToken(currentUser.getToken());
 
             BigDecimal balance = accountService.getCurrentBalance(userId);
