@@ -105,15 +105,20 @@ public class ConsoleService {
 
     //TODO : make the printing of user names and ids a little more fun/creative
     public void printUsers(List<User> users) {
-        System.out.println("\nAvailable users for sending TE bucks:");
+        System.out.println("USERS");
+        System.out.println(String.format("%-10s %-10s", "ID", "NAME"));
+        System.out.println("----------------------------------");
+
         for (User user : users)
         {
-            System.out.println("Username: " + user.getUsername() + "  |  User ID: " + user.getId());
+            System.out.println(String.format("%-10d %-10s", user.getId(), user.getUsername()));
         }
+
+        System.out.println("----------------------------------");
     }
 
     public int promptForUserId() {
-        System.out.print("\nEnter the ID of the user you want to send TE bucks to: ");
+        System.out.print("\nEnter the ID of the user you want to send TE bucks to - ");
         return promptForInt("User ID: ");
     }
 
