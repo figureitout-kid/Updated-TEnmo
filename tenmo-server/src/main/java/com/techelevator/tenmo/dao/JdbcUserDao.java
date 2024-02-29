@@ -93,6 +93,49 @@ public class JdbcUserDao implements UserDao {
         return newUser;
     }
 
+    @Override
+    public String getUsernameByUserId(int userId) {
+
+        String sql = "SELECT username" +
+                     " FROM tenmo_user" +
+                     " WHERE user_id =?;";
+
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
+
+            if (results.next())
+            {
+                return results.getString("username");
+            }
+
+
+            else
+            {
+            throw new DaoException("User not found for userId; " + userId);
+            }
+    }
+
+    @Override
+    public String getUsernameByAccountId(int accountId) {
+
+        String sql = "SELECT u.username" +
+                     " FROM tenmo_user u" +
+                     " JOIN account a ON u.user_id = a.user_id" +
+                     " WHERE account_id =?;";
+
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
+
+        if (results.next())
+        {
+            return results.getString("username");
+        }
+
+
+        else
+        {
+            throw new DaoException("User not found for accountId; " + accountId);
+        }
+    }
+
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
         user.setId(rs.getInt("user_id"));

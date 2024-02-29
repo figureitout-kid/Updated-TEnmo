@@ -84,6 +84,35 @@ public class UserService {
         return null;
     }
 
+    public String getUsernameByAccountId(int accountId) {
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    API_BASE_URL + "/" + accountId + "/username",
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    String.class
+            );
+            if (response.getStatusCode() == HttpStatus.OK)
+            {
+                return response.getBody();
+            }
+            else
+            {
+                System.out.println("Failed to get the username. Status code: " + response.getStatusCode());
+            }
+        }
+        catch (RestClientResponseException e)
+        {
+            handleRestClientResponseException(e);
+        }
+        catch (ResourceAccessException e)
+        {
+            BasicLogger.log(e.getMessage());
+            System.out.println("Cannot access the resource: " + e.getMessage());
+        }
+        return null;
+    }
+
     private void handleRestClientResponseException(RestClientResponseException e) {
         BasicLogger.log(e.getMessage());
         if (e.getRawStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
@@ -120,5 +149,18 @@ public class UserService {
             }
         }
         return filteredUsers;
+    }
+
+    public String getUsernameByUserId(int userId) {
+        User user = getUserById(userId);
+        if (user != null)
+        {
+            return user.getUsername();
+        }
+        else
+        {
+            System.out.println("User not found for ID: " + userId);
+            return null;
+        }
     }
 }

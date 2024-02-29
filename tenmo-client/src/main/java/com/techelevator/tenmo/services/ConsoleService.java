@@ -1,16 +1,27 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
-
+@Service
 public class ConsoleService {
-
+    private static final String API_BASE_URL = "http://localhost:8080/";
+    private AuthenticatedUser currentUser;
+    private UserService userService = new UserService(API_BASE_URL);
     private final Scanner scanner = new Scanner(System.in);
+
+    @Autowired
+    public ConsoleService() {
+        this.userService = userService;
+    }
 
     public int promptForMenuSelection(String prompt) {
         int menuSelection;
@@ -92,6 +103,7 @@ public class ConsoleService {
     public void printErrorMessage(String message) { System.out.println(message);}
     public void printSuccessMessage(String message) { System.out.println(message); }
 
+    //TODO : make the printing of user names and ids a little more fun/creative
     public void printUsers(List<User> users) {
         System.out.println("\nAvailable users for sending TE bucks:");
         for (User user : users)
@@ -105,10 +117,32 @@ public class ConsoleService {
         return promptForInt("User ID: ");
     }
 
+    public void printTransfers(List<Transfer> transfers, int userId) {
+        System.out.println("Transfers");
+        System.out.println("ID\t\tFrom/To\t\t\tAmount");
+        System.out.println("------------------------------------------");
+
+        for (Transfer transfer : transfers)
+        {
+            String fromTo;
+            if (transfer.getAccountFrom() == userId)
+            {
+                fromTo = "To: " + userService.getUsernameByAccountId(transfer.getAccountTo());
+            }
+            else
+            {
+                fromTo = "From: " + userService.getUsernameByAccountId(transfer.getAccountFrom());
+            }
+
+            System.out.println(transfer.getTransferId() + "\t\t" + fromTo + "\t\t$" +transfer.getAmount());
+        }
+        System.out.println("------------------------------------------");
+    }
+
     public BigDecimal promptForAmount() {
         return promptForBigDecimal("Enter the amount of TE bucks to send: ");
     }
 
 }
 
-//TODO : make the printing of user names and ids a little more fun/creative
+

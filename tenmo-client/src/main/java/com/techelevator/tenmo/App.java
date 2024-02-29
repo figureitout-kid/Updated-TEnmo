@@ -107,9 +107,20 @@ public class App {
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-		
-	}
+        int userId = currentUser.getUser().getId();
+        transferService.setAuthToken(currentUser.getToken());
+
+        List<Transfer> transferHistory = transferService.getAllTransfersForUser(userId);
+
+        if (transferHistory.isEmpty())
+        {
+            consoleService.printErrorMessage("No transfers found for user: " + currentUser.getUser().getUsername());
+        }
+        else
+        {
+            consoleService.printTransfers(transferHistory, userId);
+        }
+    }
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub
