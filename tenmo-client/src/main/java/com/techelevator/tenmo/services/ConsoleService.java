@@ -160,6 +160,11 @@ public class ConsoleService {
         return promptForBigDecimal("Enter the amount of TE bucks to send: ");
     }
 
+    public int promptForTransferId() {
+        System.out.print("\nPlease enter transfer ID to view details (0 to cancel) - \"\n");
+        return promptForInt("Transfer ID: ");
+    }
+
 }
 
 
