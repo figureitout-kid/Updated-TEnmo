@@ -1,10 +1,7 @@
 package com.techelevator.tenmo.services;
 
 
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.User;
-import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -126,7 +123,7 @@ public class ConsoleService {
 
         System.out.println("TRANSFERS:");
         System.out.println(String.format("%-10s %-25s %-10s", "ID" , "FROM/TO", "AMOUNT"));
-        System.out.println("--------------------------------------------");
+        System.out.println("----------------------------------------------");
 
         int userAccountId = userService.getAccountIdByUserId(userId);
         for (Transfer transfer : transfers)
@@ -153,7 +150,24 @@ public class ConsoleService {
                                              fromTo,
                                              positiveNegative, transfer.getAmount()));
         }
+        System.out.println("----------------------------------------------");
+    }
+
+    public void printTransferDetails(Transfer transfer){
+        String fromUsername = userService.getUsernameByAccountId(transfer.getAccountFrom());
+        String toUsername = userService.getUsernameByAccountId(transfer.getAccountTo());
+
+
+        System.out.println("\nTRANSFER DETAILS");
         System.out.println("--------------------------------------------");
+        System.out.println("Id: " + transfer.getTransferId());
+        System.out.println("From: " + (fromUsername != null ? fromUsername : "Unknown"));
+        System.out.println("To: " + (toUsername != null ? toUsername : "Unknown"));
+        System.out.println("Type: " + transfer.getTransferType());
+        System.out.println("Status: " + transfer.getTransferStatus());
+        System.out.println("Amount: $" + String.format("%.2f", transfer.getAmount()));
+        System.out.println("--------------------------------------------\n");
+
     }
 
     public BigDecimal promptForAmount() {

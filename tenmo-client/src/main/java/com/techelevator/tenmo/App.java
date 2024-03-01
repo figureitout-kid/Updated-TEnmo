@@ -120,6 +120,18 @@ public class App {
         {
             consoleService.printTransfers(transferHistory, userId);
         }
+        //prompt for transferid to get transfer details
+        int transferId = consoleService.promptForTransferId();
+        int userAccountId = userService.getAccountIdByUserId(userId);
+
+        if (transferId != 0) {
+            Transfer transfer = transferService.getTransferById(transferId);
+            if (transfer != null && (transfer.getAccountFrom() == userAccountId || transfer.getAccountTo() == userAccountId)) {
+                consoleService.printTransferDetails(transfer);
+            } else {
+                consoleService.printErrorMessage("Invalid transfer ID or transfer does not belong to the user.");
+            }
+        }
     }
 
 	private void viewPendingRequests() {
