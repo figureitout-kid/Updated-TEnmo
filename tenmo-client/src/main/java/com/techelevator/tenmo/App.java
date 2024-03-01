@@ -143,6 +143,7 @@ public class App {
 /* TODO with sendBucks : 1> add more informed print messages, 2> chop up sendBucks into
    TODO smaller pieces-- split checking for valid transfers/transfer/etc. 3> Also needs to be atomic- if one update fails, it
    TODO all fails. 4> Double check security measures. */
+
 	private void sendBucks() {
 		//display eligible users and prompt for recipient and amount
         List<User> users = userService.getAllUsersExcludingCurrent(currentUser.getUser().getId());
@@ -211,8 +212,69 @@ public class App {
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
-	}
+        //display eligible users and prompt for recipient and amount
+        List<User> users = userService.getAllUsersExcludingCurrent(currentUser.getUser().getId());
+        consoleService.printUsers(users);
+        int requestedUserId = consoleService.promptForUserId();
+        BigDecimal amount = consoleService.promptForAmount();
 
+        //validate input
+        if (requestedUserId == currentUser.getUser().getId() || amount.compareTo(BigDecimal.ZERO) <= 0)
+        {
+            consoleService.printErrorMessage("Invalid recipient or amount.");
+            return;
+        }
+
+        //balance check
+        BigDecimal balance = accountService.getCurrentBalance(currentUser.getUser().getId());
+        if(balance.compareTo(amount) < 0)
+        {
+            consoleService.printErrorMessage("Insufficient balance.");
+            return;
+        }
+
+        //retrieve account ids
+        Account accountSendingRequest = accountService.getAccountByUserId(currentUser.getUser().getId());
+        Account accountReceivingRequest = accountService.getAccountByUserId(requestedUserId);
+
+        //check if both accounts are retrieved
+        if (accountSendingRequest == null || accountReceivingRequest == null)
+        {
+            consoleService.printErrorMessage("One of the accounts could not be found.");
+            return;
+        }
+
+        //create a pending transfer
+        Transfer transfer = new Transfer();
+        transfer.setTransferType(TransferType.REQUEST);
+        transfer.setTransferStatus(TransferStatus.PENDING);
+        transfer.setAccountFrom(accountReceivingRequest.getAccountId());
+        transfer.setAccountTo(accountSendingRequest.getAccountId());
+        transfer.setAmount(amount);
+
+        //execute transfer and update balances within transactional context
+        Transfer createdTransfer = transferService.createTransfer(transfer);
+        if (createdTransfer == null)
+        {
+            consoleService.printErrorMessage("Failed to initiate transfer.");
+            return;
+        }
+
+//        //update balances
+//        boolean senderBalanceUpdated = accountService.updateBalance(currentUser.getUser().getId(), balance.subtract(amount));
+//        boolean recipientBalanceUpdated = accountService.updateBalance(recipientUserId, accountService.getCurrentBalance(recipientUserId).add(amount));
+//
+//        //finalize transfer
+//        if (senderBalanceUpdated && recipientBalanceUpdated)
+//        {
+//            createdTransfer.setTransferStatus(TransferStatus.APPROVED);
+//            consoleService.printSuccessMessage("Request transfer successful.");
+//        }
+//        else
+//        {
+//            createdTransfer.setTransferStatus(TransferStatus.REJECTED);
+//            consoleService.printErrorMessage("Transfer failed during balance update.");
+//        }
+//        transferService.updateTransfer(createdTransfer);
+    }
 }
