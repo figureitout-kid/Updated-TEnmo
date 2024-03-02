@@ -5,6 +5,7 @@ import com.techelevator.tenmo.services.*;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class App {
@@ -135,7 +136,42 @@ public class App {
     }
 
 	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
+		int userId = currentUser.getUser().getId();
+        transferService.setAuthToken(currentUser.getToken());
+
+        List<Transfer> allTransfers = transferService.getAllTransfersForUser(userId);
+        List<Transfer> pendingTransfers = new ArrayList<>();
+
+        for (Transfer transfer : allTransfers)
+        {
+            if (transfer.getTransferStatus() == TransferStatus.PENDING)
+            {
+                pendingTransfers.add(transfer);
+            }
+        }
+
+        if (pendingTransfers.isEmpty())
+        {
+            consoleService.printErrorMessage("No pending transfers found.");
+        }
+        else
+        {
+            consoleService.printTransfers(pendingTransfers, userId);
+        }
+
+        //TODO-- this code is recycled, can just create a separate helper method to use here and in view transferHistory
+        //prompt for transferid to get transfer details
+        int transferId = consoleService.promptForTransferId();
+        int userAccountId = userService.getAccountIdByUserId(userId);
+
+        if (transferId != 0) {
+            Transfer transfer = transferService.getTransferById(transferId);
+            if (transfer != null && (transfer.getAccountFrom() == userAccountId || transfer.getAccountTo() == userAccountId)) {
+                consoleService.printTransferDetails(transfer);
+            } else {
+                consoleService.printErrorMessage("Invalid transfer ID or transfer does not belong to the user.");
+            }
+        }
 		
 	}
 
@@ -148,8 +184,8 @@ public class App {
 		//display eligible users and prompt for recipient and amount
         List<User> users = userService.getAllUsersExcludingCurrent(currentUser.getUser().getId());
         consoleService.printUsers(users);
-        int recipientUserId = consoleService.promptForUserId();
-        BigDecimal amount = consoleService.promptForAmount();
+        int recipientUserId = consoleService.promptForUserIdToSend();
+        BigDecimal amount = consoleService.promptForAmountSend();
 
         //validate input
         if (recipientUserId == currentUser.getUser().getId() || amount.compareTo(BigDecimal.ZERO) <= 0)
@@ -215,8 +251,8 @@ public class App {
         //display eligible users and prompt for recipient and amount
         List<User> users = userService.getAllUsersExcludingCurrent(currentUser.getUser().getId());
         consoleService.printUsers(users);
-        int requestedUserId = consoleService.promptForUserId();
-        BigDecimal amount = consoleService.promptForAmount();
+        int requestedUserId = consoleService.promptForUserIdToRequest();
+        BigDecimal amount = consoleService.promptForAmountRequest();
 
         //validate input
         if (requestedUserId == currentUser.getUser().getId() || amount.compareTo(BigDecimal.ZERO) <= 0)
@@ -259,22 +295,6 @@ public class App {
             consoleService.printErrorMessage("Failed to initiate transfer.");
             return;
         }
-
-//        //update balances
-//        boolean senderBalanceUpdated = accountService.updateBalance(currentUser.getUser().getId(), balance.subtract(amount));
-//        boolean recipientBalanceUpdated = accountService.updateBalance(recipientUserId, accountService.getCurrentBalance(recipientUserId).add(amount));
-//
-//        //finalize transfer
-//        if (senderBalanceUpdated && recipientBalanceUpdated)
-//        {
-//            createdTransfer.setTransferStatus(TransferStatus.APPROVED);
-//            consoleService.printSuccessMessage("Request transfer successful.");
-//        }
-//        else
-//        {
-//            createdTransfer.setTransferStatus(TransferStatus.REJECTED);
-//            consoleService.printErrorMessage("Transfer failed during balance update.");
-//        }
-//        transferService.updateTransfer(createdTransfer);
+        else { consoleService.printSuccessMessage("Request successfully sent to " + userService.getUsernameByUserId(requestedUserId));}
     }
 }

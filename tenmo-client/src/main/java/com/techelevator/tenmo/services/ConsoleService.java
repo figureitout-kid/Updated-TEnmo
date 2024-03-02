@@ -100,7 +100,7 @@ public class ConsoleService {
     public void printErrorMessage(String message) { System.out.println(message);}
     public void printSuccessMessage(String message) { System.out.println(message); }
 
-    //TODO : make the printing of user names and ids a little more fun/creative
+
     public void printUsers(List<User> users) {
         System.out.println("USERS");
         System.out.println(String.format("%-10s %-10s", "ID", "NAME"));
@@ -114,8 +114,13 @@ public class ConsoleService {
         System.out.println("----------------------------------");
     }
 
-    public int promptForUserId() {
+    public int promptForUserIdToSend() {
         System.out.print("\nEnter the ID of the user you want to send TE bucks to - ");
+        return promptForInt("User ID: ");
+    }
+
+    public int promptForUserIdToRequest() {
+        System.out.print("\nEnter the ID of the user you want to request TE bucks from - ");
         return promptForInt("User ID: ");
     }
 
@@ -170,8 +175,12 @@ public class ConsoleService {
 
     }
 
-    public BigDecimal promptForAmount() {
+    public BigDecimal promptForAmountSend() {
         return promptForBigDecimal("Enter the amount of TE bucks to send: ");
+    }
+
+    public BigDecimal promptForAmountRequest() {
+        return promptForBigDecimal("Enter the amount of TE bucks to request: ");
     }
 
     public int promptForTransferId() {
