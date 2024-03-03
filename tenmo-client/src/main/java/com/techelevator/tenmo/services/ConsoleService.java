@@ -193,8 +193,9 @@ public class ConsoleService {
         return promptForInt("Transfer ID: ");
     }
 
+
     public int promptForApproveReject() {
-        System.out.println("");
+        System.out.println("APPROVE OR REJECT PENDING TRANSFER: ");
         System.out.println("1: Approve");
         System.out.println("2: Reject");
         System.out.println("0: Don't approve or reject");

@@ -174,6 +174,7 @@ public class App {
         }
 
         int approveOrReject = consoleService.promptForApproveReject();
+
 		
 	}
 
@@ -264,10 +265,10 @@ public class App {
         }
 
         //balance check
-        BigDecimal balance = accountService.getCurrentBalance(currentUser.getUser().getId());
+        BigDecimal balance = accountService.getCurrentBalance(requestedUserId);
         if(balance.compareTo(amount) < 0)
         {
-            consoleService.printErrorMessage("Insufficient balance.");
+            consoleService.printErrorMessage("Insufficient balance request.");
             return;
         }
 
@@ -303,4 +304,4 @@ public class App {
 
 
 
-
+//todo when requesting bucks-- it is checking users balance versus the recipients balance, need to adjust.

@@ -27,7 +27,7 @@ public class AccountController {
     }
 
     @GetMapping("/balance/{userId}")
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<BigDecimal> getBalance(@PathVariable int userId) {
 //        String username = principal.getName();
 //        User user = userDao.getUserByUsername(username);
