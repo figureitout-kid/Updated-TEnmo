@@ -86,7 +86,7 @@ currently trying to fix this by breaking the transactions down. updateAccountBal
 //    }
 
     @GetMapping("/user/{userId}/account")
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Account> getAccountByUserId(@PathVariable int userId) {
         Account account = accountDao.getAccountByUserId(userId);
         if (account != null)

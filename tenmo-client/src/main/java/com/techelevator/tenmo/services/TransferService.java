@@ -49,7 +49,7 @@ public class TransferService {
         }
         return null;
     }
-//TODO FINISH TRANSFERSERVICE: GET ALL TRANSFERS FOR USER, AND UPDATE TRANSFER
+
     public Transfer getTransferById(int transferId) {
         try
         {

@@ -264,14 +264,6 @@ public class App {
             return;
         }
 
-        //balance check
-        BigDecimal balance = accountService.getCurrentBalance(requestedUserId);
-        if(balance.compareTo(amount) < 0)
-        {
-            consoleService.printErrorMessage("Insufficient balance request.");
-            return;
-        }
-
         //retrieve account ids
         Account accountSendingRequest = accountService.getAccountByUserId(currentUser.getUser().getId());
         Account accountReceivingRequest = accountService.getAccountByUserId(requestedUserId);
@@ -295,7 +287,7 @@ public class App {
         Transfer createdTransfer = transferService.createTransfer(transfer);
         if (createdTransfer == null)
         {
-            consoleService.printErrorMessage("Failed to initiate transfer.");
+            consoleService.printErrorMessage("Failed to initiate request.");
             return;
         }
         else { consoleService.printSuccessMessage("Request successfully sent to " + userService.getUsernameByUserId(requestedUserId));}
@@ -303,5 +295,3 @@ public class App {
 }
 
 
-
-//todo when requesting bucks-- it is checking users balance versus the recipients balance, need to adjust.
