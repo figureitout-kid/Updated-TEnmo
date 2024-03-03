@@ -188,6 +188,20 @@ public class ConsoleService {
         return promptForInt("Transfer ID: ");
     }
 
+    public int promptForTransferIdForPending() {
+        System.out.print("\nPlease enter transfer ID to Approve/Reject (0 to cancel) - \"\n");
+        return promptForInt("Transfer ID: ");
+    }
+
+    public int promptForApproveReject() {
+        System.out.println("");
+        System.out.println("1: Approve");
+        System.out.println("2: Reject");
+        System.out.println("0: Don't approve or reject");
+        System.out.println("---------------------------");
+        return promptForInt("Please choose an option: ");
+    }
+
 }
 
 

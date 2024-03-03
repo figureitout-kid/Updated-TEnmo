@@ -159,9 +159,9 @@ public class App {
             consoleService.printTransfers(pendingTransfers, userId);
         }
 
-        //TODO-- this code is recycled, can just create a separate helper method to use here and in view transferHistory
+        //TODO-- the following code is recycled to print transfer information, can just create a separate helper method to use here and in view transferHistory
         //prompt for transferid to get transfer details
-        int transferId = consoleService.promptForTransferId();
+        int transferId = consoleService.promptForTransferIdForPending();
         int userAccountId = userService.getAccountIdByUserId(userId);
 
         if (transferId != 0) {
@@ -172,6 +172,8 @@ public class App {
                 consoleService.printErrorMessage("Invalid transfer ID or transfer does not belong to the user.");
             }
         }
+
+        int approveOrReject = consoleService.promptForApproveReject();
 		
 	}
 
@@ -298,3 +300,7 @@ public class App {
         else { consoleService.printSuccessMessage("Request successfully sent to " + userService.getUsernameByUserId(requestedUserId));}
     }
 }
+
+
+
+
