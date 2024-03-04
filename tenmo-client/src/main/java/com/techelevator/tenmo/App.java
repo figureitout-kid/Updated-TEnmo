@@ -169,6 +169,7 @@ public class App {
                 consoleService.printTransferDetails(transfer);
             } else {
                 consoleService.printErrorMessage("Invalid transfer ID or transfer does not belong to the user.");
+                return;
             }
         }
 
