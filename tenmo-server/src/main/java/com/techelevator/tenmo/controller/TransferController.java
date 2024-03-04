@@ -4,6 +4,7 @@ import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.TransferStatusDao;
 import com.techelevator.tenmo.dao.TransferTypeDao;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -74,6 +75,22 @@ public class TransferController {
         {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/{id}/status/{statusId}")
+    public ResponseEntity<Void> updateTransferStatus(@PathVariable int id, @PathVariable int statusId) {
+        TransferStatus newStatus = TransferStatus.fromValue(statusId);
+        Transfer updatedTransfer = transferDao.updateTransferStatus(id, newStatus);
+
+        if (updatedTransfer != null)
+        {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 }
 

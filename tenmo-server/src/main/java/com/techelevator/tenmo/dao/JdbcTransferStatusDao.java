@@ -16,6 +16,7 @@ public class JdbcTransferStatusDao implements TransferStatusDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    //todo created this early, but didn't use it, can be used potentially in printing pending transfers?
     @Override
     public TransferStatus getTransferStatusById(int transferStatusId) {
         String sql = "SELECT transfer_status_id, transfer_status_desc, " +

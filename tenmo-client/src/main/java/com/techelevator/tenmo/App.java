@@ -191,7 +191,7 @@ public class App {
                     boolean receiverBalanceUpdated = accountService.updateBalance(receivingUserId, accountService.getCurrentBalance(receivingUserId).add(transfer.getAmount()));
                     if (senderBalanceUpdated && receiverBalanceUpdated)
                     {
-                        transfer.setTransferStatus(TransferStatus.APPROVED);
+                        transferService.updateTransferStatus(transferId, TransferStatus.APPROVED);
                         consoleService.printSuccessMessage("Transfer approved.");
                     }
                 }
@@ -203,7 +203,7 @@ public class App {
             case 2: //reject
                 if (transfer != null && transfer.getTransferStatus() == TransferStatus.PENDING)
                 {
-                    transfer.setTransferStatus(TransferStatus.REJECTED);
+                    transferService.updateTransferStatus(transferId, TransferStatus.REJECTED);
                     consoleService.printSuccessMessage("Transfer rejected.");
                 } else {
                     consoleService.printErrorMessage("Could not reject transfer.");

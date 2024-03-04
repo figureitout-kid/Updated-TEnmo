@@ -96,6 +96,24 @@ public class JdbcTransferDao implements TransferDao {
         }
     }
 
+    @Override
+    public Transfer updateTransferStatus(int transferId, TransferStatus newStatus) {
+        String sql = "UPDATE transfer " +
+                     "SET transfer_status_id = ? " +
+                     "WHERE transfer_id = ?;";
+
+        int rowsAffected = jdbcTemplate.update(sql, newStatus.getValue(), transferId);
+
+        if (rowsAffected == 1)
+        {
+            return getTransferById(transferId);
+        }
+        else
+        {
+            throw new DaoException("Update Transfer failed: No rows affected.");
+        }
+    }
+
     private Transfer mapRowToTransfer(SqlRowSet rs) {
         Transfer transfer = new Transfer();
         transfer.setTransferId(rs.getInt("transfer_id"));

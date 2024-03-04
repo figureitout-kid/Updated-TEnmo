@@ -148,6 +148,31 @@ public class TransferService {
         return null;
     }
 
+    public boolean updateTransferStatus(int transferId, TransferStatus newStatus) {
+        HttpEntity<Void> entity = makeAuthEntity();
+        try
+        {
+            restTemplate.exchange(
+                    API_BASE_URL + "/" + transferId + "/status/" + newStatus.getValue(),
+                    HttpMethod.PUT,
+                    entity,
+                    Void.class
+            );
+            return true;
+        }
+        catch (RestClientResponseException e)
+        {
+            handleRestClientResponseException(e);
+            return false;
+        }
+        catch (ResourceAccessException e)
+        {
+            BasicLogger.log(e.getMessage());
+            System.out.println("Cannot access the resource: " + e.getMessage());
+            return false;
+        }
+    }
+
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
