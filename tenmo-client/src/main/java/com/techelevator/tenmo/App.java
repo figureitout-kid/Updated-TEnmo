@@ -136,47 +136,85 @@ public class App {
     }
 
 	private void viewPendingRequests() {
-		int userId = currentUser.getUser().getId();
+        //reminder: in this context the sender is the current user who is viewing their pending requests for money
+        int userId = currentUser.getUser().getId();
         transferService.setAuthToken(currentUser.getToken());
 
         List<Transfer> allTransfers = transferService.getAllTransfersForUser(userId);
         List<Transfer> pendingTransfers = new ArrayList<>();
 
-        for (Transfer transfer : allTransfers)
-        {
-            if (transfer.getTransferStatus() == TransferStatus.PENDING)
-            {
+        for (Transfer transfer : allTransfers) {
+            if (transfer.getTransferStatus() == TransferStatus.PENDING) {
                 pendingTransfers.add(transfer);
             }
         }
 
-        if (pendingTransfers.isEmpty())
-        {
+        if (pendingTransfers.isEmpty()) {
             consoleService.printErrorMessage("No pending transfers found.");
-        }
-        else
-        {
+        } else {
             consoleService.printTransfers(pendingTransfers, userId);
         }
 
-        //TODO-- the following code is recycled to print transfer information, can just create a separate helper method to use here and in view transferHistory
+        //TODO-- the following code is recycled to print transfer information, can just create a separate helper method to use here and in view transferHistory, as well as a createTransferObject method
+
         //prompt for transferid to get transfer details
         int transferId = consoleService.promptForTransferIdForPending();
-        int userAccountId = userService.getAccountIdByUserId(userId);
+        if (transferId == 0) return;
 
+        Transfer transfer = transferService.getTransferById(transferId);
+
+        //check transferId exists, and ensure the account from is actually the user
         if (transferId != 0) {
-            Transfer transfer = transferService.getTransferById(transferId);
-            if (transfer != null && (transfer.getAccountFrom() == userAccountId || transfer.getAccountTo() == userAccountId)) {
+            if (transfer != null && transfer.getAccountFrom() == userService.getAccountIdByUserId(userId)) {
                 consoleService.printTransferDetails(transfer);
             } else {
                 consoleService.printErrorMessage("Invalid transfer ID or transfer does not belong to the user.");
             }
         }
 
+        //prompt for approval or rejection
         int approveOrReject = consoleService.promptForApproveReject();
 
-		
-	}
+        //store accountIds for each account
+        int receivingAccountId = transfer.getAccountTo();
+        int sendingAccountId = transfer.getAccountFrom();
+
+        //retrieve userIds from accountIds to updateBalances accordingly
+        int receivingUserId = accountService.getUserIdByAccountId(receivingAccountId);
+        int sendingUserId = accountService.getUserIdByAccountId(sendingAccountId);
+
+        switch (approveOrReject) {
+            case 1: //approve
+                BigDecimal balance = accountService.getCurrentBalance(userId);
+                if (balance.compareTo(transfer.getAmount()) >= 0) {
+                    boolean senderBalanceUpdated = accountService.updateBalance(userId, balance.subtract(transfer.getAmount()));
+                    boolean receiverBalanceUpdated = accountService.updateBalance(receivingUserId, accountService.getCurrentBalance(receivingUserId).add(transfer.getAmount()));
+                    if (senderBalanceUpdated && receiverBalanceUpdated)
+                    {
+                        transfer.setTransferStatus(TransferStatus.APPROVED);
+                        consoleService.printSuccessMessage("Transfer approved.");
+                    }
+                }
+                else
+                {
+                    consoleService.printErrorMessage("Insufficient balance to approve transfer.");
+                }
+                break;
+            case 2: //reject
+                if (transfer != null && transfer.getTransferStatus() == TransferStatus.PENDING)
+                {
+                    transfer.setTransferStatus(TransferStatus.REJECTED);
+                    consoleService.printSuccessMessage("Transfer rejected.");
+                } else {
+                    consoleService.printErrorMessage("Could not reject transfer.");
+                }
+                break;
+            default:
+                break;
+
+        }
+    }
+
 
 
 /* TODO with sendBucks : 1> add more informed print messages, 2> chop up sendBucks into
@@ -231,7 +269,7 @@ public class App {
             consoleService.printErrorMessage("Failed to initiate transfer.");
             return;
         }
-//        BigDecimal balance = accountService.getCurrentBalance(currentUser.getUser().getId());
+
         //update balances
         boolean senderBalanceUpdated = accountService.updateBalance(currentUser.getUser().getId(), balance.subtract(amount));
 		boolean recipientBalanceUpdated = accountService.updateBalance(recipientUserId, accountService.getCurrentBalance(recipientUserId).add(amount));

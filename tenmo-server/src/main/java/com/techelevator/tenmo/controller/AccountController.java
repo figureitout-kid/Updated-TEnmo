@@ -27,11 +27,7 @@ public class AccountController {
     }
 
     @GetMapping("/balance/{userId}")
-//    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<BigDecimal> getBalance(@PathVariable int userId) {
-//        String username = principal.getName();
-//        User user = userDao.getUserByUsername(username);
-
         BigDecimal balance = accountDao.getBalance(userId);
         if (balance != null) {
             return new ResponseEntity<>(balance, HttpStatus.OK);
@@ -39,11 +35,7 @@ public class AccountController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-/* commenting this out to create the addTo subtractFrom for balance updating?? 02/27: updating the balance in sendBucks saves the receivers new balance as the senders balance,
-currently trying to fix this by breaking the transactions down. updateAccountBalance does work on it's own, worth noting.
- */
-//    //TODO this will need to be tied into creating a transaction once that is up and running? Keeping in mind-- the amount to transfer will be deducted from sender
-//    //TODO and added to the receiver balances.
+
     @Transactional
     @PutMapping("/{userId}/balance")
     public ResponseEntity<Account> updateAccountBalance(@PathVariable int userId, @RequestBody BigDecimal newBalance) {
@@ -57,33 +49,19 @@ currently trying to fix this by breaking the transactions down. updateAccountBal
         }
     }
 
-//    @PutMapping("/userId/add")
-//    @PreAuthorize("isAuthenticated()")
-//    public ResponseEntity<Void> addToBalance(@PathVariable int userId, @RequestBody BigDecimal amount) {
-//        try
-//        {
-//            accountDao.addToBalance(userId, amount);
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        }
-//        catch (DaoException e)
-//        {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-//        }
-//    }
+    @GetMapping("{accountId}/account-to-userId")
+    public ResponseEntity<Integer> getUserIdByAccountId(@PathVariable int accountId) {
+        int userId = accountDao.getUserIdByAccountId(accountId);
+        if (userId != 0)
+        {
+            return new ResponseEntity<>(userId, HttpStatus.OK);
+        }
+        else
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
-//    @PutMapping("/userId/subtract")
-//    @PreAuthorize("isAuthenticated()")
-//    public ResponseEntity<Void> subtractFromBalance(@PathVariable int userId, @RequestBody BigDecimal amount) {
-//        try
-//        {
-//            accountDao.subtractFromBalance(userId, amount);
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        }
-//        catch (DaoException e)
-//        {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-//        }
-//    }
 
     @GetMapping("/user/{userId}/account")
 //    @PreAuthorize("isAuthenticated()")

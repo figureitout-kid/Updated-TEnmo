@@ -94,10 +94,29 @@ public class AccountService {
         }
         return null;
     }
-// TODO add getAccountByAccountId--------------------------------------------------------
+
+    public Integer getUserIdByAccountId(int accountId) {
+        String url = API_BASE_URL + "/" + accountId + "/account-to-userId";
+        HttpEntity<Void> entity = makeAuthEntity();
+
+        try
+        {
+            ResponseEntity<Integer> response = restTemplate.exchange(url, HttpMethod.GET, entity, Integer.class);
+            return response.getBody();
+        }
+        catch (RestClientResponseException e)
+        {
+            handleRestClientResponseException(e);
+        }
+        catch (ResourceAccessException e)
+        {
+            BasicLogger.log(e.getMessage());
+            System.out.println("Cannot access the resource: " + e.getMessage());
+        }
+        return null;
+    }
 
 
-    //helper methods
 
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();

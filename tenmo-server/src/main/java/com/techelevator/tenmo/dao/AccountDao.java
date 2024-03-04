@@ -8,8 +8,13 @@ import java.math.BigDecimal;
 public interface AccountDao {
     BigDecimal getBalance(int userId);
     Account getAccountByUserId(int userId);
+    int getUserIdByAccountId(int accountId);
     @Transactional
     Account updateBalance(Account account);
+
+
+
+
     @Transactional
     void addToBalance(int userId, BigDecimal amount);
     @Transactional
