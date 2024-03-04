@@ -1,4 +1,5 @@
 # Money Transfer App (Work in Progress - as of 02/24)
+[app is in working order with all use cases functional. as of 03/24: next steps will be cleaning up methods as needed, creating unit tests, and tidying up security measures]
 
 This app is an online payment service for transferring bucks between friends. It consists of the backend, which is a RESTful API server, and a frontend which is a java-based command-line application.
 
