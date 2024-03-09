@@ -33,7 +33,8 @@ public class JdbcUserDao implements UserDao {
             if (results.next()) {
                 user = mapRowToUser(results);
             }
-        } catch (CannotGetJdbcConnectionException e) {
+        }
+        catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
         return user;
@@ -102,14 +103,10 @@ public class JdbcUserDao implements UserDao {
 
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
 
-            if (results.next())
-            {
+            if (results.next()) {
                 return results.getString("username");
             }
-
-
-            else
-            {
+            else {
             throw new DaoException("User not found for userId; " + userId);
             }
     }
@@ -124,14 +121,10 @@ public class JdbcUserDao implements UserDao {
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
 
-        if (results.next())
-        {
+        if (results.next()) {
             return results.getString("username");
         }
-
-
-        else
-        {
+        else {
             throw new DaoException("User not found for accountId; " + accountId);
         }
     }
@@ -145,12 +138,10 @@ public class JdbcUserDao implements UserDao {
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
 
-        if (results.next())
-        {
+        if (results.next()) {
             return results.getInt("account_id");
         }
-        else
-        {
+        else {
             throw new DaoException("User not found for userId; " + userId);
         }
     }
