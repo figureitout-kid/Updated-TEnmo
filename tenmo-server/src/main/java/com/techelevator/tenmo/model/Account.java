@@ -7,6 +7,7 @@ public class Account {
     private int userId;
     private BigDecimal balance;
 
+
     //constructors
     public Account(){}
 
@@ -15,6 +16,7 @@ public class Account {
         this.userId = userId;
         this.balance = balance;
     }
+
 
     //getters and setters
     public int getAccountId() { return accountId; }
