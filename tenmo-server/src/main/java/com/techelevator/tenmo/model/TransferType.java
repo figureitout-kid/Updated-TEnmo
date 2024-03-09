@@ -23,10 +23,8 @@ public enum TransferType {
     public static TransferType fromValue(int value) {
         for (TransferType type : values())
         {
-            if (type.getValue() == value)
-            {
-                return type;
-            }
+            if (type.getValue() == value) return type;
+
         }
         throw new IllegalArgumentException("Unknown TransferType value: " + value);
     }

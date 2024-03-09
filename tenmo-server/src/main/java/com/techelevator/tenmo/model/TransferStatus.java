@@ -18,10 +18,8 @@ public enum TransferStatus {
     public static TransferStatus fromValue(int value) {
         for (TransferStatus status : TransferStatus.values())
         {
-            if (status.getValue() == value)
-            {
-                return status;
-            }
+            if (status.getValue() == value) return status;
+
         }
         throw new IllegalArgumentException("Unknown TransferStatus value: " + value);
     }

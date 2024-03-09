@@ -21,7 +21,6 @@ public class Transfer {
     }
 
     public Transfer() {
-
     }
 
     //getters and setters
