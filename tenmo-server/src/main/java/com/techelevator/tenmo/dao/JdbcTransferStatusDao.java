@@ -23,19 +23,14 @@ public class JdbcTransferStatusDao implements TransferStatusDao {
                      "FROM transfer_status " +
                      "WHERE transfer_status_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferStatusId);
-        if (results.next())
-        {
+        if (results.next()) {
             int id = results.getInt("transfer_status_id");
             String description = results.getString("transfer_status_desc");
 
             return TransferStatus.valueOf(description.toUpperCase());
         }
-        else
-        {
+        else {
             throw new DaoException("Transfer status not found for id " + transferStatusId);
         }
     }
 }
-
-    /* did not utilize a mapper here as we used an enum, but in the future could be added
-    for any potential changes to how the transfer status/type are used. */

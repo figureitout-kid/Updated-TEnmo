@@ -25,8 +25,7 @@ public class JdbcTransferDao implements TransferDao {
                      "WHERE transfer_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
         Transfer transfer = null;
-        if (results.next())
-        {
+        if (results.next()) {
             transfer = mapRowToTransfer(results);
         }
         return transfer;
@@ -42,8 +41,7 @@ public class JdbcTransferDao implements TransferDao {
                      "WHERE a.user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
 
-        while (results.next())
-        {
+        while (results.next()) {
             transfers.add(mapRowToTransfer(results));
         }
         return transfers;
@@ -63,12 +61,10 @@ public class JdbcTransferDao implements TransferDao {
                 transfer.getAmount(),
         }, Integer.class);
 
-        if (newId != null)
-        {
+        if (newId != null) {
             return getTransferById(newId);
         }
-        else
-        {
+        else {
             throw new DaoException("Create Transfer failed: No ID returned.");
         }
     }
@@ -86,12 +82,10 @@ public class JdbcTransferDao implements TransferDao {
                 transfer.getAccountTo(),
                 transfer.getAmount(),
                 transfer.getTransferId());
-        if (rowsAffected == 1)
-        {
+        if (rowsAffected == 1) {
             return getTransferById(transfer.getTransferId());
         }
-        else
-        {
+        else {
             throw new DaoException("Update Transfer failed: No rows affected.");
         }
     }
@@ -104,12 +98,10 @@ public class JdbcTransferDao implements TransferDao {
 
         int rowsAffected = jdbcTemplate.update(sql, newStatus.getValue(), transferId);
 
-        if (rowsAffected == 1)
-        {
+        if (rowsAffected == 1) {
             return getTransferById(transferId);
         }
-        else
-        {
+        else {
             throw new DaoException("Update Transfer failed: No rows affected.");
         }
     }

@@ -27,20 +27,19 @@ public class JdbcAccountDao implements AccountDao {
         SqlRowSet row = jdbcTemplate.queryForRowSet(sql, userId);
 
         BigDecimal balance = null;
-        if(row.next())
-        {
+        if(row.next()) {
             balance = row.getBigDecimal("balance");
         }
         return balance;
     }
+
     @Override
     public Account getAccountByUserId(int userId) {
         String sql = "SELECT account_id, user_id, balance " +
                      "FROM account WHERE user_id = ?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
         Account account = null;
-        if (result.next())
-        {
+        if (result.next()) {
             account = mapRowToAccount(result);
         }
         return account;
@@ -53,12 +52,10 @@ public class JdbcAccountDao implements AccountDao {
                      "WHERE account_id = ?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
 
-        if (result.next())
-        {
+        if (result.next()) {
             return result.getInt("user_id");
         }
-        else
-        {
+        else {
             throw new RuntimeException("Account not found for accountId: " + accountId);
         }
     }
@@ -69,21 +66,17 @@ public class JdbcAccountDao implements AccountDao {
         String sql = "UPDATE account " +
                      "SET balance = ? " +
                      "WHERE user_id = ?";
-        try
-        {
+        try {
             int rowsAffected = jdbcTemplate.update(sql, account.getBalance(), account.getUserId());
-            if (rowsAffected == 0)
-            {
+            if (rowsAffected == 0) {
                 throw new DaoException("Zero rows affects, expected at least one");
             }
             updatedAccount = getAccountByUserId(account.getUserId());
         }
-        catch (CannotGetJdbcConnectionException e)
-        {
+        catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
-        catch (DataIntegrityViolationException e)
-        {
+        catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation, e");
         }
         return updatedAccount;
@@ -93,15 +86,13 @@ public class JdbcAccountDao implements AccountDao {
     public void addToBalance(int userId, BigDecimal amount) {
         //get current account
         Account account = getAccountByUserId(userId);
-        if (account != null)
-        {
+        if (account != null) {
             BigDecimal newBalance = account.getBalance().add(amount);
             //use existing updateBalance method to persis the new balance
             account.setBalance(newBalance);
             updateBalance(account);
         }
-        else
-        {
+        else {
             throw new DaoException("Account not found for userId: " + userId);
         }
     }
@@ -110,20 +101,17 @@ public class JdbcAccountDao implements AccountDao {
     public void subtractFromBalance(int userId, BigDecimal amount) {
         //get current account
         Account account = getAccountByUserId(userId);
-        if (account != null)
-        {
+        if (account != null) {
             BigDecimal newBalance = account.getBalance().subtract(amount);
             //check for overdraft-- may want to implement this elsewhere, covering it here for now
-            if (newBalance.compareTo(BigDecimal.ZERO) < 0)
-            {
+            if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
                 throw new DaoException("Insufficient funds for userId: " + userId);
             }
 
             account.setBalance(newBalance);
             updateBalance(account);
         }
-        else
-        {
+        else {
             throw new DaoException("Account not found for userId: " + userId);
         }
     }

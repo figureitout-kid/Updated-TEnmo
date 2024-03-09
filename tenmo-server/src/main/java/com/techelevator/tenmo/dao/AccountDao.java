@@ -11,10 +11,6 @@ public interface AccountDao {
     int getUserIdByAccountId(int accountId);
     @Transactional
     Account updateBalance(Account account);
-
-
-
-
     @Transactional
     void addToBalance(int userId, BigDecimal amount);
     @Transactional

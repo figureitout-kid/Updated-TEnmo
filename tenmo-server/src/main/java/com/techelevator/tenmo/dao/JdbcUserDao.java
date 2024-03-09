@@ -50,7 +50,8 @@ public class JdbcUserDao implements UserDao {
                 User user = mapRowToUser(results);
                 users.add(user);
             }
-        } catch (CannotGetJdbcConnectionException e) {
+        }
+        catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
         return users;
@@ -66,7 +67,8 @@ public class JdbcUserDao implements UserDao {
             if (rowSet.next()) {
                 user = mapRowToUser(rowSet);
             }
-        } catch (CannotGetJdbcConnectionException e) {
+        }
+        catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
         return user;
@@ -86,9 +88,11 @@ public class JdbcUserDao implements UserDao {
                 sql = "INSERT INTO account (user_id, balance) VALUES (?, ?)";
                 jdbcTemplate.update(sql, newUserId, STARTING_BALANCE);
             }
-        } catch (CannotGetJdbcConnectionException e) {
+        }
+        catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
+        }
+        catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
         }
         return newUser;

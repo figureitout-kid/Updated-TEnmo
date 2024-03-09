@@ -20,19 +20,14 @@ public class JdbcTransferTypeDao implements TransferTypeDao {
                      "WHERE transfer_type_id = ?;";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferTypeId);
-        if (results.next())
-        {
+        if (results.next()) {
             int id = results.getInt("transfer_type_id");
             String description = results.getString("transfer_type_desc");
 
             return TransferType.valueOf(description.toUpperCase());
         }
-        else
-        {
+        else {
             throw new DaoException("Transfer type not found for id " + transferTypeId);
         }
     }
-
-    /* did not utilize a mapper here as we used an enum, but in the future could be added
-    for any potential changes to how the transfer status/type are used. */
 }
