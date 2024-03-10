@@ -31,7 +31,8 @@ public class AccountController {
         BigDecimal balance = accountDao.getBalance(userId);
         if (balance != null) {
             return new ResponseEntity<>(balance, HttpStatus.OK);
-        } else {
+        }
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -44,7 +45,8 @@ public class AccountController {
             account.setBalance(newBalance);
             accountDao.updateBalance(account);
             return new ResponseEntity<>(account, HttpStatus.OK);
-        } else {
+        }
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -52,31 +54,25 @@ public class AccountController {
     @GetMapping("{accountId}/account-to-userId")
     public ResponseEntity<Integer> getUserIdByAccountId(@PathVariable int accountId) {
         int userId = accountDao.getUserIdByAccountId(accountId);
-        if (userId != 0)
-        {
+        if (userId != 0) {
             return new ResponseEntity<>(userId, HttpStatus.OK);
         }
-        else
-        {
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 
     @GetMapping("/user/{userId}/account")
 //    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Account> getAccountByUserId(@PathVariable int userId) {
         Account account = accountDao.getAccountByUserId(userId);
-        if (account != null)
-        {
+        if (account != null) {
             return new ResponseEntity<>(account, HttpStatus.OK);
         }
-        else
-        {
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 
     private int findUserIdByUsername(String username) {
         User user = userDao.getUserByUsername(username);
