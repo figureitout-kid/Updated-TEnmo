@@ -24,12 +24,10 @@ public class UserController {
     @GetMapping("{userId}")
     public User getUserById(@PathVariable int userId) {
         User user = userDao.getUserById(userId);
-        if (user == null)
-        {
+        if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity not found");
         }
-        else
-        {
+        else {
             return user;
         }
     }
@@ -39,8 +37,10 @@ public class UserController {
 
     @GetMapping("/{userId}/username-by-userid")
     public String getUsernameByUserId(@PathVariable int userId) {return userDao.getUsernameByUserId(userId);}
+
     @GetMapping("/{accountId}/username")
     public String getUsernameByAccountId(@PathVariable int accountId) {return userDao.getUsernameByAccountId(accountId);}
+
     @GetMapping("/{userId}/accountId-by-userid")
     public int getAccountIdByUserId(@PathVariable int userId) {return userDao.getAccountIdByUserId(userId);}
 
