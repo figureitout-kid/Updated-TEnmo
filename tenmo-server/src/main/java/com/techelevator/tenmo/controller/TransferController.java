@@ -29,12 +29,10 @@ public class TransferController {
     @PostMapping
     public ResponseEntity<Transfer> createTransfer(@RequestBody Transfer transfer) {
         Transfer newTransfer = transferDao.createTransfer(transfer);
-        if (newTransfer != null)
-        {
+        if (newTransfer != null) {
             return new ResponseEntity<>(newTransfer, HttpStatus.CREATED);
         }
-        else
-        {
+        else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -42,12 +40,10 @@ public class TransferController {
     @GetMapping("/{id}")
     public ResponseEntity<Transfer> getTransferById(@PathVariable int id) {
         Transfer transfer = transferDao.getTransferById(id);
-        if (transfer != null)
-        {
+        if (transfer != null) {
             return new ResponseEntity<>(transfer, HttpStatus.OK);
         }
-        else
-        {
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -62,17 +58,14 @@ public class TransferController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Transfer> updateTransfer(@PathVariable int id, @RequestBody Transfer transfer) {
-        if (transfer.getTransferId() != id)
-        {
+        if (transfer.getTransferId() != id) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Transfer updatedTransfer = transferDao.updateTransfer(transfer);
-        if (updatedTransfer != null)
-        {
+        if (updatedTransfer != null) {
             return new ResponseEntity<>(updatedTransfer, HttpStatus.OK);
         }
-        else
-        {
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -82,15 +75,12 @@ public class TransferController {
         TransferStatus newStatus = TransferStatus.fromValue(statusId);
         Transfer updatedTransfer = transferDao.updateTransferStatus(id, newStatus);
 
-        if (updatedTransfer != null)
-        {
+        if (updatedTransfer != null) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        else
-        {
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 }
 
