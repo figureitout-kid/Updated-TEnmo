@@ -39,9 +39,11 @@ public class App {
             menuSelection = consoleService.promptForMenuSelection("Please choose an option: ");
             if (menuSelection == 1) {
                 handleRegister();
-            } else if (menuSelection == 2) {
+            }
+            else if (menuSelection == 2) {
                 handleLogin();
-            } else if (menuSelection != 0) {
+            }
+            else if (menuSelection != 0) {
                 System.out.println("Invalid Selection");
                 consoleService.pause();
             }
@@ -53,7 +55,8 @@ public class App {
         UserCredentials credentials = consoleService.promptForCredentials();
         if (authenticationService.register(credentials)) {
             System.out.println("Registration successful. You can now login.");
-        } else {
+        }
+        else {
             consoleService.printErrorMessage("Error registering new user.");
         }
     }
@@ -73,17 +76,23 @@ public class App {
             menuSelection = consoleService.promptForMenuSelection("Please choose an option: ");
             if (menuSelection == 1) {
                 viewCurrentBalance();
-            } else if (menuSelection == 2) {
+            }
+            else if (menuSelection == 2) {
                 viewTransferHistory();
-            } else if (menuSelection == 3) {
+            }
+            else if (menuSelection == 3) {
                 viewPendingRequests();
-            } else if (menuSelection == 4) {
+            }
+            else if (menuSelection == 4) {
                 sendBucks();
-            } else if (menuSelection == 5) {
+            }
+            else if (menuSelection == 5) {
                 requestBucks();
-            } else if (menuSelection == 0) {
+            }
+            else if (menuSelection == 0) {
                 continue;
-            } else {
+            }
+            else {
                 System.out.println("Invalid Selection");
             }
             consoleService.pause();
@@ -91,8 +100,7 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-		try
-        {
+		try {
             int userId = currentUser.getUser().getId();
             accountService.setAuthToken(currentUser.getToken());
 
@@ -100,8 +108,7 @@ public class App {
             consoleService.printBalance(balance);
 
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             consoleService.printErrorMessage("Could not retrieve balance.");
         }
 		
@@ -113,14 +120,13 @@ public class App {
 
         List<Transfer> transferHistory = transferService.getAllTransfersForUser(userId);
 
-        if (transferHistory.isEmpty())
-        {
+        if (transferHistory.isEmpty()) {
             consoleService.printErrorMessage("No transfers found for user: " + currentUser.getUser().getUsername());
         }
-        else
-        {
+        else {
             consoleService.printTransfers(transferHistory, userId);
         }
+
         //prompt for transferid to get transfer details
         int transferId = consoleService.promptForTransferId();
         int userAccountId = userService.getAccountIdByUserId(userId);
@@ -129,7 +135,8 @@ public class App {
             Transfer transfer = transferService.getTransferById(transferId);
             if (transfer != null && (transfer.getAccountFrom() == userAccountId || transfer.getAccountTo() == userAccountId)) {
                 consoleService.printTransferDetails(transfer);
-            } else {
+            }
+            else {
                 consoleService.printErrorMessage("Invalid transfer ID or transfer does not belong to the user.");
             }
         }
@@ -151,7 +158,8 @@ public class App {
 
         if (pendingTransfers.isEmpty()) {
             consoleService.printErrorMessage("No pending transfers found.");
-        } else {
+        }
+        else {
             consoleService.printTransfers(pendingTransfers, userId);
         }
 
@@ -167,7 +175,8 @@ public class App {
         if (transferId != 0) {
             if (transfer != null && transfer.getAccountFrom() == userService.getAccountIdByUserId(userId)) {
                 consoleService.printTransferDetails(transfer);
-            } else {
+            }
+            else {
                 consoleService.printErrorMessage("Invalid transfer ID or transfer does not belong to the user.");
                 return;
             }
@@ -190,23 +199,21 @@ public class App {
                 if (balance.compareTo(transfer.getAmount()) >= 0) {
                     boolean senderBalanceUpdated = accountService.updateBalance(userId, balance.subtract(transfer.getAmount()));
                     boolean receiverBalanceUpdated = accountService.updateBalance(receivingUserId, accountService.getCurrentBalance(receivingUserId).add(transfer.getAmount()));
-                    if (senderBalanceUpdated && receiverBalanceUpdated)
-                    {
+                    if (senderBalanceUpdated && receiverBalanceUpdated) {
                         transferService.updateTransferStatus(transferId, TransferStatus.APPROVED);
                         consoleService.printSuccessMessage("Transfer approved.");
                     }
                 }
-                else
-                {
+                else {
                     consoleService.printErrorMessage("Insufficient balance to approve transfer.");
                 }
                 break;
             case 2: //reject
-                if (transfer != null && transfer.getTransferStatus() == TransferStatus.PENDING)
-                {
+                if (transfer != null && transfer.getTransferStatus() == TransferStatus.PENDING) {
                     transferService.updateTransferStatus(transferId, TransferStatus.REJECTED);
                     consoleService.printSuccessMessage("Transfer rejected.");
-                } else {
+                }
+                else {
                     consoleService.printErrorMessage("Could not reject transfer.");
                 }
                 break;
@@ -230,16 +237,14 @@ public class App {
         BigDecimal amount = consoleService.promptForAmountSend();
 
         //validate input
-        if (recipientUserId == currentUser.getUser().getId() || amount.compareTo(BigDecimal.ZERO) <= 0)
-        {
+        if (recipientUserId == currentUser.getUser().getId() || amount.compareTo(BigDecimal.ZERO) <= 0) {
             consoleService.printErrorMessage("Invalid recipient or amount.");
             return;
         }
 
         //balance check
         BigDecimal balance = accountService.getCurrentBalance(currentUser.getUser().getId());
-        if(balance.compareTo(amount) < 0)
-        {
+        if(balance.compareTo(amount) < 0) {
             consoleService.printErrorMessage("Insufficient balance.");
             return;
         }
@@ -249,8 +254,7 @@ public class App {
         Account recipientAccount = accountService.getAccountByUserId(recipientUserId);
 
         //check if both accounts are retrieved
-        if (senderAccount == null || recipientAccount == null)
-        {
+        if (senderAccount == null || recipientAccount == null) {
             consoleService.printErrorMessage("One of the accounts could not be found.");
             return;
         }
@@ -265,8 +269,7 @@ public class App {
 
         //execute transfer and update balances within transactional context
         Transfer createdTransfer = transferService.createTransfer(transfer);
-        if (createdTransfer == null)
-        {
+        if (createdTransfer == null) {
             consoleService.printErrorMessage("Failed to initiate transfer.");
             return;
         }
@@ -276,13 +279,11 @@ public class App {
 		boolean recipientBalanceUpdated = accountService.updateBalance(recipientUserId, accountService.getCurrentBalance(recipientUserId).add(amount));
 
         //finalize transfer
-        if (senderBalanceUpdated && recipientBalanceUpdated)
-        {
+        if (senderBalanceUpdated && recipientBalanceUpdated) {
             createdTransfer.setTransferStatus(TransferStatus.APPROVED);
             consoleService.printSuccessMessage("Transfer successful.");
         }
-        else
-        {
+        else {
             createdTransfer.setTransferStatus(TransferStatus.REJECTED);
             consoleService.printErrorMessage("Transfer failed during balance update.");
         }
@@ -297,8 +298,7 @@ public class App {
         BigDecimal amount = consoleService.promptForAmountRequest();
 
         //validate input
-        if (requestedUserId == currentUser.getUser().getId() || amount.compareTo(BigDecimal.ZERO) <= 0)
-        {
+        if (requestedUserId == currentUser.getUser().getId() || amount.compareTo(BigDecimal.ZERO) <= 0) {
             consoleService.printErrorMessage("Invalid recipient or amount.");
             return;
         }
@@ -308,8 +308,7 @@ public class App {
         Account accountReceivingRequest = accountService.getAccountByUserId(requestedUserId);
 
         //check if both accounts are retrieved
-        if (accountSendingRequest == null || accountReceivingRequest == null)
-        {
+        if (accountSendingRequest == null || accountReceivingRequest == null) {
             consoleService.printErrorMessage("One of the accounts could not be found.");
             return;
         }
@@ -324,8 +323,7 @@ public class App {
 
         //execute transfer and update balances within transactional context
         Transfer createdTransfer = transferService.createTransfer(transfer);
-        if (createdTransfer == null)
-        {
+        if (createdTransfer == null) {
             consoleService.printErrorMessage("Failed to initiate request.");
             return;
         }
