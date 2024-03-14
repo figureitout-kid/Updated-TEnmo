@@ -32,20 +32,17 @@ public class TransferService {
                     makeTransferEntity(transfer),
                     Transfer.class
             );
-            if (response.getStatusCode() == HttpStatus.CREATED)
-            {
+            if (response.getStatusCode() == HttpStatus.CREATED) {
                 return response.getBody();
             }
-            else
-            {
+            else {
                 System.out.println("Failed to create transfer. Status code: " + response.getStatusCode());
             }
-        } catch (RestClientResponseException e)
-        {
+        }
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
@@ -53,8 +50,7 @@ public class TransferService {
     }
 
     public Transfer getTransferById(int transferId) {
-        try
-        {
+        try {
             ResponseEntity<Transfer> response = restTemplate.exchange(
                     API_BASE_URL + "/" + transferId,
                     HttpMethod.GET,
@@ -62,21 +58,17 @@ public class TransferService {
                     Transfer.class
             );
 
-            if (response.getStatusCode() == HttpStatus.OK)
-            {
+            if (response.getStatusCode() == HttpStatus.OK) {
                 return response.getBody();
             }
-            else
-            {
+            else {
                 System.out.println("Failed to get transfer details, Status code: " + response.getStatusCode());
             }
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource " + e.getMessage());
         }
@@ -86,8 +78,7 @@ public class TransferService {
 
 
     public List<Transfer> getAllTransfersForUser(int userId) {
-        try
-        {
+        try {
             ResponseEntity<List<Transfer>> response = restTemplate.exchange(
                     API_BASE_URL + "/users/" + userId,
                     HttpMethod.GET,
@@ -95,21 +86,17 @@ public class TransferService {
                     new ParameterizedTypeReference<List<Transfer>>() {}
             );
 
-            if (response.getStatusCode() == HttpStatus.OK)
-            {
+            if (response.getStatusCode() == HttpStatus.OK) {
                 return response.getBody();
             }
-            else
-            {
+            else {
                 System.out.println("Failed to get transfer list. Status code: " + response.getStatusCode());
             }
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
@@ -118,8 +105,7 @@ public class TransferService {
 
 
     public Transfer updateTransfer(Transfer transfer) {
-        try
-        {
+        try {
             ResponseEntity<Transfer> response = restTemplate.exchange(
                     API_BASE_URL + "/" + transfer.getTransferId(),
                     HttpMethod.PUT,
@@ -127,21 +113,17 @@ public class TransferService {
                     Transfer.class
             );
 
-            if (response.getStatusCode() == HttpStatus.OK)
-            {
+            if (response.getStatusCode() == HttpStatus.OK) {
                 return response.getBody();
             }
-            else
-            {
+            else {
                 System.out.println("Failed to update the transfer. Status code: " + response.getStatusCode());
             }
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
@@ -150,8 +132,7 @@ public class TransferService {
 
     public boolean updateTransferStatus(int transferId, TransferStatus newStatus) {
         HttpEntity<Void> entity = makeAuthEntity();
-        try
-        {
+        try {
             restTemplate.exchange(
                     API_BASE_URL + "/" + transferId + "/status/" + newStatus.getValue(),
                     HttpMethod.PUT,
@@ -160,13 +141,11 @@ public class TransferService {
             );
             return true;
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
             return false;
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
             return false;

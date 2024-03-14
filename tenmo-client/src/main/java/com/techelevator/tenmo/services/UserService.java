@@ -27,29 +27,24 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        try
-        {
+        try {
             ResponseEntity<List<User>> response = restTemplate.exchange(
                     API_BASE_URL,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     new ParameterizedTypeReference<List<User>>() {}
             );
-            if (response.getStatusCode() == HttpStatus.OK)
-            {
+            if (response.getStatusCode() == HttpStatus.OK) {
                 return response.getBody();
             }
-            else
-            {
+            else {
                 System.out.println("Failed to get users. Status code: " + response.getStatusCode());
             }
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
@@ -57,29 +52,24 @@ public class UserService {
     }
 
     public User getUserById(int userId) {
-        try
-        {
+        try {
             ResponseEntity<User> response = restTemplate.exchange(
               API_BASE_URL + "/" + userId,
               HttpMethod.GET,
               makeAuthEntity(),
               User.class
             );
-            if (response.getStatusCode() == HttpStatus.OK)
-            {
+            if (response.getStatusCode() == HttpStatus.OK) {
                 return response.getBody();
             }
-            else
-            {
+            else {
                 System.out.println("Failed to get the user. Status code: " + response.getStatusCode());
             }
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
@@ -94,21 +84,17 @@ public class UserService {
                     makeAuthEntity(),
                     String.class
             );
-            if (response.getStatusCode() == HttpStatus.OK)
-            {
+            if (response.getStatusCode() == HttpStatus.OK) {
                 return response.getBody();
             }
-            else
-            {
+            else {
                 System.out.println("Failed to get the username. Status code: " + response.getStatusCode());
             }
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
@@ -122,21 +108,17 @@ public class UserService {
                     makeAuthEntity(),
                     Integer.class
             );
-            if (response.getStatusCode() == HttpStatus.OK)
-            {
+            if (response.getStatusCode() == HttpStatus.OK) {
                 return response.getBody();
             }
-            else
-            {
+            else {
                 System.out.println("Failed to get the accountId. Status code: " + response.getStatusCode());
             }
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
@@ -145,11 +127,14 @@ public class UserService {
 
     private void handleRestClientResponseException(RestClientResponseException e) {
         BasicLogger.log(e.getMessage());
+
         if (e.getRawStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
             System.out.println("Not authorized to perform this operation. Please log in.");
-        } else if (e.getRawStatusCode() == HttpStatus.BAD_REQUEST.value()) {
+        }
+        else if (e.getRawStatusCode() == HttpStatus.BAD_REQUEST.value()) {
             System.out.println("An error occurred while processing the request: " + e.getStatusText());
-        } else {
+        }
+        else {
             System.out.println("An error occurred: " + e.getMessage());
         }
     }
@@ -166,15 +151,12 @@ public class UserService {
         List<User> allUsers = getAllUsers();
         List<User> filteredUsers = new ArrayList<>();
 
-        if (allUsers == null)
-        {
+        if (allUsers == null) {
             return Collections.emptyList();
         }
 
-        for (User user : allUsers)
-        {
-            if (user.getId() != currentUserId)
-            {
+        for (User user : allUsers) {
+            if (user.getId() != currentUserId) {
                 filteredUsers.add(user);
             }
         }
@@ -183,12 +165,10 @@ public class UserService {
 
     public String getUsernameByUserId(int userId) {
         User user = getUserById(userId);
-        if (user != null)
-        {
+        if (user != null) {
             return user.getUsername();
         }
-        else
-        {
+        else {
             System.out.println("User not found for ID: " + userId);
             return null;
         }

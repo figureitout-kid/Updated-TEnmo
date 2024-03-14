@@ -24,29 +24,24 @@ public class AccountService {
     }
 
     public BigDecimal getCurrentBalance(int userId) {
-        try
-        {
+        try {
             ResponseEntity<BigDecimal> response = restTemplate.exchange (
                 API_BASE_URL + BALANCE_URL + "/" + userId,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     BigDecimal.class
             );
-            if (response.getStatusCode() == HttpStatus.OK)
-            {
+            if (response.getStatusCode() == HttpStatus.OK) {
                 return response.getBody();
             }
-            else
-            {
+            else {
                 System.out.println("Failed to get balance. Status code: " + response.getStatusCode());
             }
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
@@ -58,17 +53,14 @@ public class AccountService {
 
         HttpEntity<BigDecimal> entity = new HttpEntity<>(newBalance, makeAuthEntity().getHeaders());
 
-        try
-        {
+        try {
             restTemplate.put(updateBalanceUrl, entity);
             return true;
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
@@ -78,17 +70,14 @@ public class AccountService {
     public Account getAccountByUserId(int userId) {
         String url = API_BASE_URL + "/user/" + userId + "/account";
         HttpEntity<Void> entity = makeAuthEntity();
-        try
-        {
+        try {
             ResponseEntity<Account> response = restTemplate.exchange(url, HttpMethod.GET, entity, Account.class);
             return response.getBody();
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
@@ -99,17 +88,14 @@ public class AccountService {
         String url = API_BASE_URL + "/" + accountId + "/account-to-userId";
         HttpEntity<Void> entity = makeAuthEntity();
 
-        try
-        {
+        try {
             ResponseEntity<Integer> response = restTemplate.exchange(url, HttpMethod.GET, entity, Integer.class);
             return response.getBody();
         }
-        catch (RestClientResponseException e)
-        {
+        catch (RestClientResponseException e) {
             handleRestClientResponseException(e);
         }
-        catch (ResourceAccessException e)
-        {
+        catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
             System.out.println("Cannot access the resource: " + e.getMessage());
         }
@@ -128,11 +114,12 @@ public class AccountService {
         BasicLogger.log(e.getMessage());
         if (e.getRawStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
             System.out.println("Not authorized to perform this operation. Please log in.");
-        } else if (e.getRawStatusCode() == HttpStatus.BAD_REQUEST.value()) {
+        }
+        else if (e.getRawStatusCode() == HttpStatus.BAD_REQUEST.value()) {
             System.out.println("An error occurred while processing the request: " + e.getStatusText());
-        } else {
+        }
+        else {
             System.out.println("An error occurred: " + e.getMessage());
         }
     }
-
 }

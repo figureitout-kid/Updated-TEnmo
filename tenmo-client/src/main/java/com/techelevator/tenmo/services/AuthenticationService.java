@@ -29,7 +29,8 @@ public class AuthenticationService {
             ResponseEntity<AuthenticatedUser> response =
                     restTemplate.exchange(baseUrl + "login", HttpMethod.POST, entity, AuthenticatedUser.class);
             user = response.getBody();
-        } catch (RestClientResponseException | ResourceAccessException e) {
+        }
+        catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
         return user;
@@ -41,7 +42,8 @@ public class AuthenticationService {
         try {
             restTemplate.exchange(baseUrl + "register", HttpMethod.POST, entity, Void.class);
             success = true;
-        } catch (RestClientResponseException | ResourceAccessException e) {
+        }
+        catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
         return success;

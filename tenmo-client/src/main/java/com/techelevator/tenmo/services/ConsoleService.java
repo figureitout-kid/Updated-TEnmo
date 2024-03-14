@@ -25,7 +25,8 @@ public class ConsoleService {
         System.out.print(prompt);
         try {
             menuSelection = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             menuSelection = -1;
         }
         return menuSelection;
@@ -73,7 +74,8 @@ public class ConsoleService {
         while (true) {
             try {
                 return Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
+            }
+            catch (NumberFormatException e) {
                 System.out.println("Please enter a number.");
             }
         }
@@ -84,7 +86,8 @@ public class ConsoleService {
         while (true) {
             try {
                 return new BigDecimal(scanner.nextLine());
-            } catch (NumberFormatException e) {
+            }
+            catch (NumberFormatException e) {
                 System.out.println("Please enter a decimal number.");
             }
         }
@@ -130,19 +133,16 @@ public class ConsoleService {
         System.out.println("----------------------------------------------");
 
         int userAccountId = userService.getAccountIdByUserId(userId);
-        for (Transfer transfer : transfers)
-        {
+        for (Transfer transfer : transfers) {
             String fromTo = "Unknown";
             String positiveNegative = "";
-            if (transfer.getAccountFrom() == userAccountId)
-            {
+            if (transfer.getAccountFrom() == userAccountId) {
                 //outgoing transfer, show who it is "to"
                 String username = userService.getUsernameByAccountId(transfer.getAccountTo());
                 fromTo = "To: " + username;
                 positiveNegative = "-";
             }
-            else  if (transfer.getAccountTo() == userAccountId)
-            {
+            else  if (transfer.getAccountTo() == userAccountId) {
                 //incoming transfer, show who it "from"
                 String username = userService.getUsernameByAccountId(transfer.getAccountFrom());
                 fromTo = "From: " + username;
